@@ -21,6 +21,14 @@ class UserHolder {
     return users[login];
   }
 
+  User getUserByName(String fullName) {
+    User user;
+    users.forEach((String login, User u) {
+      if (u.name == fullName) user = u;
+    });
+    return user;
+  }
+
   User registerUserByPhone(String name, String phone) {
     User user = User(name: name, phone: phone, email: "");
 
@@ -44,10 +52,35 @@ class UserHolder {
   }
 
   User findUserInFriends(String fullName, User user) {
-    print(user.friends);
+    // User user = getUserByName(fullName);
+    // if (user == null) throw Exception("A user with this name not found");
+
+    User foundUser = getUserByLogin(fullName);
+    if (foundUser == null) throw Exception("A user with this name not found");
+
+    User friend = foundUser.findFriend(user);
+    if (friend == null)
+      throw Exception("${user.login} is not a friend of the login");
+
+    return friend;
   }
 
   void setFriends(String login, List friends) {
     users[login].friends = friends;
+  }
+
+  List<User> importUsers(List<String> csv) {
+    List<User> importedUsers = [];
+
+    csv.forEach((element) {
+      List splitted = element.split(";");
+      importedUsers.add(User(
+        name: splitted[0].trim(),
+        email: splitted[1].trim(),
+        phone: splitted[2].trim(),
+      ));
+    });
+
+    return importedUsers;
   }
 }

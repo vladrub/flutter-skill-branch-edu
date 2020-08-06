@@ -29,8 +29,8 @@ class User {
     return User._(
       firstName: _getFirstName(name),
       lastName: _getLastName(name),
-      phone: phone.isNotEmpty ? checkPhone(phone) : null,
-      email: email.isNotEmpty ? checkEmail(email) : null,
+      phone: (phone != null && phone.isNotEmpty) ? checkPhone(phone) : null,
+      email: (email != null && email.isNotEmpty) ? checkEmail(email) : null,
     );
   }
 
@@ -89,6 +89,14 @@ class User {
 
   void removeFriend(User friend) {
     friends.remove(friend);
+  }
+
+  User findFriend(User friend) {
+    User user;
+    friends.forEach((User u) {
+      if (u.name == friend.name) user = u;
+    });
+    return user;
   }
 
   @override

@@ -132,22 +132,22 @@ void main() {
     });
   });
 
-  // test('Test: UserHolder.importUsers()', () {
-  //   User user = User(
-  //       name: "Dan Tot",
-  //       phone: "+1 (231) 076-1449",
-  //       email: "dan.tot@yandex.ru");
+  test('Test: UserHolder.importUsers()', () {
+    User user = User(
+        name: "Dan Tot",
+        phone: "+1 (231) 076-1449",
+        email: "dan.tot@yandex.ru");
 
-  //   List<User> users = holder.importUsers([
-  //     """
-  //     ${user.name};
-  //     ${user.email};
-  //     ${user.phone};
-  //     """,
-  //   ]);
+    List<User> users = holder.importUsers([
+      """
+      ${user.name};
+      ${user.email};
+      ${user.phone};
+      """,
+    ]);
 
-  //   expect(users[0].login, user.login);
-  //   expect(users[0].email, user.email);
-  //   expect(users[0].phone, user.phone);
-  // });
+    expect(users[0].login, user.login);
+    expect(users[0].email, user.email);
+    expect(users[0].phone, user.phone);
+  });
 }
