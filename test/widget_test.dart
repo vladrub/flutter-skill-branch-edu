@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart'
     show expect, group, isA, setUp, tearDownAll, test, throwsA;
 
-import 'package:SkillBranchFlutter/models/user.dart';
+import '../lib/models/user.dart';
+// import 'package:SkillBranchFlutter/models/user.dart';
 import '../lib/user_holder.dart';
 
 void main() {
