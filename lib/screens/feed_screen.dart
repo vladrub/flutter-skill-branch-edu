@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:galleryapp/res/res.dart';
 import 'package:galleryapp/widgets/widgets.dart';
 
+const String kFlutterDash = 'https://picsum.photos/900/600';
+
 class FeedScreen extends StatefulWidget {
   FeedScreen({Key key}) : super(key: key);
 
@@ -31,7 +33,12 @@ class _FeedScreenState extends State<FeedScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Photo(photoLink: 'https://picsum.photos/900/600'),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/photo');
+          },
+          child: Photo(photoLink: kFlutterDash),
+        ),
         _buildPhotoMeta(),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
