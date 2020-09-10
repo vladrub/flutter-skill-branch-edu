@@ -89,22 +89,47 @@ class _FullScreenImageState extends State<FullScreenImage> {
                   ),
                   Column(
                     children: [
-                      CustomButton(
-                        label: 'Save',
-                        onTap: () {
-                          print('asd');
-                        },
-                      )
+                      _customButton('Save', () {
+                        print('asd');
+                      })
                     ],
                   ),
                   Column(
-                    children: [CustomButton(label: 'Visit')],
+                    children: [
+                      _customButton('Visit', () {
+                        print('asd');
+                      })
+                    ],
                   ),
                 ],
               ),
             )
           ],
         ));
+  }
+
+  Widget _customButton(label, onTap) {
+    return GestureDetector(
+      onTap: () => onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: Container(
+          width: 105,
+          height: 36,
+          color: AppColors.blue,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                label,
+                style: AppStyles.h4.copyWith(color: AppColors.white),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildPhotoMeta() {
