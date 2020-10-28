@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:galleryapp/screens/home_screen.dart';
+import 'package:galleryapp/screens/home.dart';
 import 'package:galleryapp/screens/photo_screen.dart';
 
 class MyApp extends StatelessWidget {
