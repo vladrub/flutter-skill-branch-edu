@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:galleryapp/res/res.dart';
 
 class Photo extends StatelessWidget {
-  const Photo({this.photoLink, Key key}) : super(key: key);
+  const Photo({
+    this.photoLink,
+    Key key,
+  }) : super(key: key);
 
   final String photoLink;
 

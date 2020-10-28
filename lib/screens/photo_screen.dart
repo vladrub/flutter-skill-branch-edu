@@ -5,29 +5,32 @@ import 'package:galleryapp/res/res.dart';
 import 'package:galleryapp/widgets/widgets.dart';
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage({this.altDescription, this.userName, this.name, Key key})
-      : super(key: key);
+  FullScreenImage({
+    this.altDescription = 'Description',
+    this.userName = '@kaparray',
+    this.heroTag = 'tag',
+    this.name = 'Name',
+    this.photo = 'https://picsum.photos/900/600',
+    this.userPhoto =
+        'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
+    Key key,
+  }) : super(key: key);
 
   final String altDescription;
+  final String heroTag;
   final String userName;
   final String name;
+  final String photo;
+  final String userPhoto;
 
   @override
   _FullScreenImageState createState() => _FullScreenImageState();
 }
 
 class _FullScreenImageState extends State<FullScreenImage> {
-  String altDescription;
-  String userName;
-  String name;
-
   @override
   void initState() {
     super.initState();
-    altDescription =
-        widget.altDescription != null ? widget.altDescription : 'Description';
-    userName = widget.userName != null ? '@' + widget.userName : '@kaparray';
-    name = widget.name != null ? widget.name : 'Name';
   }
 
   @override
@@ -55,11 +58,14 @@ class _FullScreenImageState extends State<FullScreenImage> {
         ),
         body: Column(
           children: [
-            Photo(photoLink: 'https://picsum.photos/900/600'),
+            Hero(
+              tag: widget.heroTag,
+              child: Photo(photoLink: widget.photo),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text(
-                altDescription,
+                widget.altDescription,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: AppStyles.h3.copyWith(color: AppColors.black),
@@ -141,8 +147,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
           Row(
             children: [
               UserAvatar(
-                avatarLink:
-                    'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
+                avatarLink: widget.userPhoto,
               ),
               SizedBox(width: 6),
               Column(
@@ -150,11 +155,11 @@ class _FullScreenImageState extends State<FullScreenImage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    name,
+                    widget.name,
                     style: AppStyles.h2Black,
                   ),
                   Text(
-                    userName,
+                    widget.heroTag,
                     style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
                   )
                 ],

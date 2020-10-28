@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:galleryapp/screens/feed_screen.dart';
+import 'package:galleryapp/screens/home_screen.dart';
 import 'package:galleryapp/screens/photo_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,11 +13,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => FeedScreen(),
-        '/photo': (BuildContext context) => FullScreenImage(
-            name: 'Vladislav Rubanovich',
-            userName: '@rubdev',
-            altDescription: 'asdasd'),
+        '/': (BuildContext context) => HomeScreen(),
+        '/photo': (BuildContext context) => FullScreenImage(),
       },
       initialRoute: '/',
       // home: FeedScreen(),

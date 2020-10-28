@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:galleryapp/res/res.dart';
+import 'package:galleryapp/screens/photo_screen.dart';
 import 'package:galleryapp/widgets/widgets.dart';
 
 const String kFlutterDash = 'https://picsum.photos/900/600';
@@ -18,7 +19,7 @@ class _FeedScreenState extends State<FeedScreen> {
       body: ListView.builder(itemBuilder: (BuildContext context, int index) {
         return Column(
           children: [
-            _buildItem(),
+            _buildItem(index),
             Divider(
               thickness: 2.0,
               color: AppColors.mercury,
@@ -29,15 +30,22 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem(index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/photo');
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return FullScreenImage(
+                heroTag: 'hero$index',
+              );
+            }));
           },
-          child: Photo(photoLink: kFlutterDash),
+          child: Hero(
+            tag: 'hero$index',
+            child: Photo(photoLink: kFlutterDash),
+          ),
         ),
         _buildPhotoMeta(),
         Padding(
