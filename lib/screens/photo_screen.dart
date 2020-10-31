@@ -27,10 +27,23 @@ class FullScreenImage extends StatefulWidget {
   _FullScreenImageState createState() => _FullScreenImageState();
 }
 
-class _FullScreenImageState extends State<FullScreenImage> {
+class _FullScreenImageState extends State<FullScreenImage>
+    with TickerProviderStateMixin {
+  AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 1500), vsync: this)
+      ..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -144,27 +157,67 @@ class _FullScreenImageState extends State<FullScreenImage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              UserAvatar(
-                avatarLink: widget.userPhoto,
-              ),
-              SizedBox(width: 6),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.name,
-                    style: AppStyles.h2Black,
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (BuildContext context, Widget child) {
+              final Animation<double> opacity1 = Tween<double>(
+                begin: 0.0,
+                end: 1.0,
+              ).animate(
+                CurvedAnimation(
+                  parent: _controller,
+                  curve: Interval(
+                    0.0,
+                    0.5,
+                    curve: Curves.ease,
                   ),
-                  Text(
-                    widget.heroTag,
-                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                ),
+              );
+
+              final Animation<double> opacity2 = Tween<double>(
+                begin: 0.0,
+                end: 1.0,
+              ).animate(
+                CurvedAnimation(
+                  parent: _controller,
+                  curve: Interval(
+                    0.5,
+                    1.0,
+                    curve: Curves.ease,
+                  ),
+                ),
+              );
+
+              return Row(
+                children: [
+                  Opacity(
+                    opacity: opacity1.value,
+                    child: UserAvatar(
+                      avatarLink: widget.userPhoto,
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  Opacity(
+                    opacity: opacity2.value,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: AppStyles.h2Black,
+                        ),
+                        Text(
+                          widget.heroTag,
+                          style: AppStyles.h5Black
+                              .copyWith(color: AppColors.manatee),
+                        )
+                      ],
+                    ),
                   )
                 ],
-              )
-            ],
+              );
+            },
           )
         ],
       ),
