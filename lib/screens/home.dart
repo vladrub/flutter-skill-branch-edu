@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:galleryapp/res/app_icons.dart';
-import 'package:galleryapp/res/colors.dart';
-import 'package:galleryapp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/res/app_icons.dart';
+import 'package:FlutterGalleryApp/res/colors.dart';
+import 'package:FlutterGalleryApp/screens/feed_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);

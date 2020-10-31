@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:galleryapp/res/res.dart';
-import 'package:galleryapp/widgets/widgets.dart';
+import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({

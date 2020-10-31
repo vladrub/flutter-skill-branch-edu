@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:galleryapp/res/res.dart';
-import 'package:galleryapp/screens/photo_screen.dart';
-import 'package:galleryapp/widgets/widgets.dart';
+import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/screens/photo_screen.dart';
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
 const String kFlutterDash = 'https://picsum.photos/900/600';
 

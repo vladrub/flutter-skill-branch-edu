@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:galleryapp/screens/home.dart';
-import 'package:galleryapp/screens/photo_screen.dart';
+import 'package:FlutterGalleryApp/screens/home.dart';
+import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

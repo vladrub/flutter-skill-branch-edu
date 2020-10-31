@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:galleryapp/widgets/widgets.dart';
-import 'package:galleryapp/screens/photo_screen.dart';
-import 'package:galleryapp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
+import 'package:FlutterGalleryApp/screens/photo_screen.dart';
+import 'package:FlutterGalleryApp/screens/feed_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
