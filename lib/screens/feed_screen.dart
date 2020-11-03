@@ -36,11 +36,20 @@ class _FeedScreenState extends State<FeedScreen> {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return FullScreenImage(
+            Navigator.pushNamed(
+              context,
+              '/fullScreenImage',
+              arguments: FullScreenImageArguments(
+                altDescription: 'Description',
                 heroTag: 'hero$index',
-              );
-            }));
+                userName: '@kaparray',
+                name: 'Name',
+                photo: 'https://picsum.photos/900/600',
+                userPhoto:
+                    'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
+                routeSettings: RouteSettings(arguments: 'Some title'),
+              ),
+            );
           },
           child: Hero(
             tag: 'hero$index',
@@ -54,7 +63,10 @@ class _FeedScreenState extends State<FeedScreen> {
             'Beautiful girl in a yellow dress with a flower on her head in the summer in the forest',
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: AppStyles.h3.copyWith(color: AppColors.black),
+            style: Theme.of(context)
+                .textTheme
+                .headline3
+                .copyWith(color: AppColors.black),
           ),
         )
       ],
@@ -80,11 +92,14 @@ class _FeedScreenState extends State<FeedScreen> {
                 children: [
                   Text(
                     'Vladislav Rubanovich',
-                    style: AppStyles.h2Black,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                   Text(
                     '@rubdev',
-                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: AppColors.manatee),
                   )
                 ],
               )

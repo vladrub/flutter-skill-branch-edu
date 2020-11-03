@@ -1,18 +1,41 @@
+import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+
+class FullScreenImageArguments {
+  FullScreenImageArguments({
+    this.altDescription,
+    this.heroTag,
+    this.userName,
+    this.name,
+    this.photo,
+    this.userPhoto,
+    this.routeSettings,
+    this.key,
+  });
+
+  final String altDescription;
+  final String heroTag;
+  final String userName;
+  final String name;
+  final String photo;
+  final String userPhoto;
+  final RouteSettings routeSettings;
+  final Key key;
+}
 
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({
-    this.altDescription = 'Description',
-    this.userName = '@kaparray',
-    this.heroTag = 'tag',
-    this.name = 'Name',
-    this.photo = 'https://picsum.photos/900/600',
-    this.userPhoto =
-        'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
+    this.altDescription,
+    this.userName,
+    this.heroTag,
+    this.name,
+    this.photo,
+    this.userPhoto,
     Key key,
   }) : super(key: key);
 
@@ -50,25 +73,7 @@ class _FullScreenImageState extends State<FullScreenImage>
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.back,
-              color: Colors.black26,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(
-            'Photo',
-            style: AppStyles.h1Black,
-          ),
-          centerTitle: true,
-          elevation: 0,
-          bottomOpacity: 0,
-          backgroundColor: Colors.white,
-        ),
+        appBar: _buildAppBar(),
         body: Column(
           children: [
             Hero(
@@ -81,7 +86,10 @@ class _FullScreenImageState extends State<FullScreenImage>
                 widget.altDescription,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: AppStyles.h3.copyWith(color: AppColors.black),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    .copyWith(color: AppColors.black),
               ),
             ),
             _buildPhotoMeta(),
@@ -108,16 +116,73 @@ class _FullScreenImageState extends State<FullScreenImage>
                   ),
                   Column(
                     children: [
-                      _customButton('Save', () {
-                        print('asd');
-                      })
+                      _customButton(
+                        'Save',
+                        () => showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Download photos'),
+                            content: Text(
+                                'Are you sure you want to download a photo?'),
+                            actions: [
+                              FlatButton(
+                                onPressed: () async {
+                                  GallerySaver.saveImage(
+                                          'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg')
+                                      .then((bool success) {
+                                    setState(() {
+                                      print('Image is saved');
+                                    });
+                                  });
+                                },
+                                child: Text('Download'),
+                              ),
+                              FlatButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text('Close'),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   Column(
                     children: [
-                      _customButton('Visit', () {
-                        print('asd');
-                      })
+                      _customButton(
+                        'Visit',
+                        () async {
+                          OverlayState overlayState = Overlay.of(context);
+                          OverlayEntry overlayEntry =
+                              OverlayEntry(builder: (BuildContext context) {
+                            return Positioned(
+                              top: MediaQuery.of(context).viewInsets.top + 50,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    padding:
+                                        EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mercury,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text('test'),
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+
+                          overlayState.insert(overlayEntry);
+                          await Future.delayed(Duration(seconds: 1));
+                          overlayEntry.remove();
+                        },
+                      )
                     ],
                   ),
                 ],
@@ -127,9 +192,45 @@ class _FullScreenImageState extends State<FullScreenImage>
         ));
   }
 
-  Widget _customButton(label, onTap) {
+  AppBar _buildAppBar() {
+    return AppBar(
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: Colors.black26,
+          ),
+          onPressed: () async {
+            String claim = await showModalBottomSheet(
+              context: context,
+              builder: (context) => ClaimBottomSheet(),
+            );
+
+            print(claim);
+          },
+        )
+      ],
+      leading: IconButton(
+        icon: Icon(
+          CupertinoIcons.back,
+          color: Colors.black26,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        'Photo',
+        style: Theme.of(context).textTheme.headline1,
+      ),
+      centerTitle: true,
+      elevation: 0,
+      bottomOpacity: 0,
+      backgroundColor: AppColors.white,
+    );
+  }
+
+  Widget _customButton(label, VoidCallback onTap) {
     return GestureDetector(
-      onTap: () => onTap,
+      onTap: onTap,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(7),
         child: Container(
@@ -142,7 +243,10 @@ class _FullScreenImageState extends State<FullScreenImage>
             children: [
               Text(
                 label,
-                style: AppStyles.h4.copyWith(color: AppColors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(color: AppColors.white),
               )
             ],
           ),
@@ -205,11 +309,13 @@ class _FullScreenImageState extends State<FullScreenImage>
                       children: [
                         Text(
                           widget.name,
-                          style: AppStyles.h2Black,
+                          style: Theme.of(context).textTheme.headline2,
                         ),
                         Text(
                           widget.heroTag,
-                          style: AppStyles.h5Black
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
                               .copyWith(color: AppColors.manatee),
                         )
                       ],
