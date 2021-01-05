@@ -1,4 +1,4 @@
-# FlutterGalleryApp
+# unsplash_init
 
 A new Flutter project.
 
