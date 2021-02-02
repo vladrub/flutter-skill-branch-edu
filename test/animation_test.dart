@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
-import 'package:FlutterGalleryApp/screens/photo_screen.dart';
-import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/pages/photo/photo.dart';
+import 'package:FlutterGalleryApp/pages/home/screens/feed_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

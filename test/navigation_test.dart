@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:FlutterGalleryApp/screens/home.dart';
+import 'package:FlutterGalleryApp/pages/home/home.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:FlutterGalleryApp/screens/photo_screen.dart';
-import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/pages/photo/photo.dart';
+import 'package:FlutterGalleryApp/pages/home/screens/feed_screen.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 
 void main() {

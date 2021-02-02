@@ -1,6 +1,6 @@
+import 'package:FlutterGalleryApp/pages/photo/photo.dart';
 import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
-import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
 const String kFlutterDash = 'https://picsum.photos/900/600';
@@ -39,7 +39,7 @@ class _FeedScreenState extends State<FeedScreen> {
             Navigator.pushNamed(
               context,
               '/fullScreenImage',
-              arguments: FullScreenImageArguments(
+              arguments: PhotoPageArguments(
                 altDescription: 'Description',
                 heroTag: 'hero$index',
                 userName: '@kaparray',

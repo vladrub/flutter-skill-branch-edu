@@ -6,8 +6,8 @@ import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
-class FullScreenImageArguments {
-  FullScreenImageArguments({
+class PhotoPageArguments {
+  PhotoPageArguments({
     this.altDescription,
     this.heroTag,
     this.userName,
@@ -28,8 +28,8 @@ class FullScreenImageArguments {
   final Key key;
 }
 
-class FullScreenImage extends StatefulWidget {
-  FullScreenImage({
+class PhotoPage extends StatefulWidget {
+  PhotoPage({
     this.altDescription,
     this.userName,
     this.heroTag,
@@ -47,11 +47,10 @@ class FullScreenImage extends StatefulWidget {
   final String userPhoto;
 
   @override
-  _FullScreenImageState createState() => _FullScreenImageState();
+  _PhotoPageState createState() => _PhotoPageState();
 }
 
-class _FullScreenImageState extends State<FullScreenImage>
-    with TickerProviderStateMixin {
+class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
   AnimationController _controller;
 
   @override

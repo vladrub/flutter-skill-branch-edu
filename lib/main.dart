@@ -19,25 +19,36 @@ class ConnectivityOverlay {
 
   static OverlayEntry overlayEntry;
 
-  void showOverlay(BuildContext context, Widget child) {
+  void showOverlay(BuildContext context) {
     OverlayState overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(builder: (BuildContext context) {
-      return Positioned(
-        top: MediaQuery.of(context).viewInsets.top + 50,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-              decoration: BoxDecoration(
-                color: AppColors.mercury,
-                borderRadius: BorderRadius.circular(12),
+      return Material(
+        color: Colors.white,
+        child: Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                AppIcons.connection,
+                size: 59,
+                color: Color(0xff919BA8),
               ),
-              child: child,
-            ),
+              SizedBox(height: 21),
+              Container(
+                width: 171,
+                child: Text(
+                  'There was an error loading the feed',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline2.copyWith(
+                        color: Color(0xff919BA8),
+                      ),
+                ),
+              ),
+            ],
           ),
         ),
       );
