@@ -38,7 +38,7 @@ class _FeedScreenState extends State<FeedScreen> {
           onTap: () {
             Navigator.pushNamed(
               context,
-              '/fullScreenImage',
+              '/photo',
               arguments: PhotoPageArguments(
                 altDescription: 'Description',
                 heroTag: 'hero$index',

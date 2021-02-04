@@ -3,6 +3,43 @@ import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
 
+ThemeData buildThemeData() {
+  return ThemeData(
+    scaffoldBackgroundColor: AppColors.white,
+    textTheme: buildAppTextTheme(),
+    appBarTheme: buildAppBarTheme(),
+    popupMenuTheme: PopupMenuThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      textStyle: TextStyle(
+        fontSize: 14,
+        color: AppColors.black,
+        fontWeight: FontWeight.normal,
+        fontFamily: 'Roboto',
+      ),
+    ),
+    tabBarTheme: TabBarTheme(
+      labelColor: AppColors.blue,
+      unselectedLabelColor: AppColors.black,
+      indicatorSize: TabBarIndicatorSize.tab,
+      labelPadding: const EdgeInsets.symmetric(
+        vertical: 9,
+      ),
+      indicator: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.blue,
+            width: 3.0,
+          ),
+        ),
+      ),
+    ),
+    primarySwatch: Colors.blue,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+}
+
 TextTheme buildAppTextTheme() {
   return TextTheme(
     headline1: TextStyle(
@@ -55,6 +92,27 @@ TextTheme buildAppTextTheme() {
       fontWeight: FontWeight.w300,
       fontFamily: 'Roboto',
       fontStyle: FontStyle.normal,
+    ),
+  );
+}
+
+AppBarTheme buildAppBarTheme() {
+  return AppBarTheme(
+    centerTitle: true,
+    elevation: 0,
+    color: AppColors.white,
+    textTheme: TextTheme(
+      headline6: TextStyle(
+        fontSize: 18,
+        height: 23 / 18,
+        color: AppColors.black,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Roboto',
+        fontStyle: FontStyle.normal,
+      ),
+    ),
+    iconTheme: IconThemeData(
+      color: Colors.black26,
     ),
   );
 }

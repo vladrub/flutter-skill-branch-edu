@@ -29,22 +29,9 @@ class PhotoPageArguments {
 }
 
 class PhotoPage extends StatefulWidget {
-  PhotoPage({
-    this.altDescription,
-    this.userName,
-    this.heroTag,
-    this.name,
-    this.photo,
-    this.userPhoto,
-    Key key,
-  }) : super(key: key);
+  static const routeName = '/photo';
 
-  final String altDescription;
-  final String heroTag;
-  final String userName;
-  final String name;
-  final String photo;
-  final String userPhoto;
+  PhotoPage({Key key}) : super(key: key);
 
   @override
   _PhotoPageState createState() => _PhotoPageState();
@@ -52,6 +39,7 @@ class PhotoPage extends StatefulWidget {
 
 class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
   AnimationController _controller;
+  PhotoPageArguments _photoPageArguments;
 
   @override
   void initState() {
@@ -70,135 +58,132 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _photoPageArguments = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: _buildAppBar(),
-        body: Column(
-          children: [
-            Hero(
-              tag: widget.heroTag,
-              child: Photo(photoLink: widget.photo),
+      appBar: _buildAppBar(),
+      body: Column(
+        children: [
+          Hero(
+            tag: _photoPageArguments.heroTag,
+            child: Photo(photoLink: _photoPageArguments.photo),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: Text(
+              _photoPageArguments.altDescription,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline3
+                  .copyWith(color: AppColors.black),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Text(
-                widget.altDescription,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline3
-                    .copyWith(color: AppColors.black),
-              ),
-            ),
-            _buildPhotoMeta(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 105,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            LikeButton(
-                              likeCount: 2157,
-                              isLiked: false,
+          ),
+          _buildPhotoMeta(),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 105,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          LikeButton(
+                            likeCount: 2157,
+                            isLiked: false,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    _customButton(
+                      'Save',
+                      () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Download photos'),
+                          content: Text(
+                              'Are you sure you want to download a photo?'),
+                          actions: [
+                            FlatButton(
+                              onPressed: () async {
+                                GallerySaver.saveImage(
+                                        'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg')
+                                    .then((bool success) {
+                                  setState(() {
+                                    print('Image is saved');
+                                  });
+                                });
+                              },
+                              child: Text('Download'),
+                            ),
+                            FlatButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text('Close'),
                             )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      _customButton(
-                        'Save',
-                        () => showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Download photos'),
-                            content: Text(
-                                'Are you sure you want to download a photo?'),
-                            actions: [
-                              FlatButton(
-                                onPressed: () async {
-                                  GallerySaver.saveImage(
-                                          'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg')
-                                      .then((bool success) {
-                                    setState(() {
-                                      print('Image is saved');
-                                    });
-                                  });
-                                },
-                                child: Text('Download'),
-                              ),
-                              FlatButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: Text('Close'),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      _customButton(
-                        'Visit',
-                        () async {
-                          OverlayState overlayState = Overlay.of(context);
-                          OverlayEntry overlayEntry =
-                              OverlayEntry(builder: (BuildContext context) {
-                            return Positioned(
-                              top: MediaQuery.of(context).viewInsets.top + 50,
-                              child: Material(
-                                color: Colors.transparent,
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    _customButton(
+                      'Visit',
+                      () async {
+                        OverlayState overlayState = Overlay.of(context);
+                        OverlayEntry overlayEntry =
+                            OverlayEntry(builder: (BuildContext context) {
+                          return Positioned(
+                            top: MediaQuery.of(context).viewInsets.top + 50,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
                                 child: Container(
-                                  alignment: Alignment.center,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    padding:
-                                        EdgeInsets.fromLTRB(16, 10, 16, 10),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.mercury,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text('test'),
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.mercury,
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
+                                  child: Text('test'),
                                 ),
                               ),
-                            );
-                          });
+                            ),
+                          );
+                        });
 
-                          overlayState.insert(overlayEntry);
-                          await Future.delayed(Duration(seconds: 1));
-                          overlayEntry.remove();
-                        },
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ));
+                        overlayState.insert(overlayEntry);
+                        await Future.delayed(Duration(seconds: 1));
+                        overlayEntry.remove();
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       actions: [
         IconButton(
-          icon: Icon(
-            Icons.more_vert,
-            color: Colors.black26,
-          ),
+          icon: Icon(Icons.more_vert),
           onPressed: () async {
             String claim = await showModalBottomSheet(
               context: context,
@@ -210,20 +195,10 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
         )
       ],
       leading: IconButton(
-        icon: Icon(
-          CupertinoIcons.back,
-          color: Colors.black26,
-        ),
+        icon: Icon(CupertinoIcons.back),
         onPressed: () => Navigator.pop(context),
       ),
-      title: Text(
-        'Photo',
-        style: Theme.of(context).textTheme.headline1,
-      ),
-      centerTitle: true,
-      elevation: 0,
-      bottomOpacity: 0,
-      backgroundColor: AppColors.white,
+      title: Text('Photo'),
     );
   }
 
@@ -296,7 +271,7 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
                   Opacity(
                     opacity: opacity1.value,
                     child: UserAvatar(
-                      avatarLink: widget.userPhoto,
+                      avatarLink: _photoPageArguments.userPhoto,
                     ),
                   ),
                   SizedBox(width: 6),
@@ -307,11 +282,11 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.name,
+                          _photoPageArguments.name,
                           style: Theme.of(context).textTheme.headline2,
                         ),
                         Text(
-                          widget.heroTag,
+                          _photoPageArguments.heroTag,
                           style: Theme.of(context)
                               .textTheme
                               .headline5

@@ -24,6 +24,21 @@ class Repository {
     }
   }
 
+  static Future<bool> likePhoto(String photoId) async {
+    var response = await http.get('https://api.unsplash.com/me', headers: {
+      'Authorization': 'Bearer $authToken',
+    });
+
+    print(response.body);
+    print(response.reasonPhrase);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return true; //returns 201 - Created
+    } else {
+      throw Exception('Error: ${response.reasonPhrase}');
+    }
+  }
+
   // static Future<PhotoList> getPhotos(int page, int perPage) async {
   //   var response = await http.get(
   //       'https://api.unsplash.com/photos?page=$page&per_page=$perPage',

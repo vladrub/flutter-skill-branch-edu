@@ -1,4 +1,6 @@
-import 'package:FlutterGalleryApp/store/connectivity/connectivity_store.dart';
+import 'package:FlutterGalleryApp/pages/login/login.dart';
+import 'package:FlutterGalleryApp/store/auth_store.dart';
+import 'package:FlutterGalleryApp/store/connectivity_store.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +15,7 @@ import '../../widgets/widgets.dart';
 import '../../res/res.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage();
+  static const routeName = '/';
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,7 +23,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ConnectivityStore _connectivityStore;
+  AuthStore _authStore;
   ReactionDisposer _disposer;
+
+  int currentTab = 0;
+
+  List<Widget> pages = [
+    FeedScreen(),
+    SearchScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   void initState() {
@@ -34,24 +45,17 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  int currentTab = 0;
-
-  List<Widget> pages = [
-    FeedScreen(),
-    SearchScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    _connectivityStore = Provider.of<ConnectivityStore>(context, listen: true);
+    _connectivityStore = Provider.of<ConnectivityStore>(context);
+    _authStore = Provider.of<AuthStore>(context);
 
     _disposer = reaction(
       (_) => _connectivityStore.connectivityStream.value,
       (result) => (result == ConnectivityResult.none)
           ? ConnectivityOverlay().showOverlay(context)
           : ConnectivityOverlay().removeOverlay(context),
-      // delay: 4000,
+      delay: 4000,
     );
 
     return Scaffold(
@@ -59,14 +63,24 @@ class _HomePageState extends State<HomePage> {
         itemCornerRadius: 8,
         curve: Curves.ease,
         onItemSelected: (int index) {
-          setState(() {
-            currentTab = index;
-          });
+          if (index == 2 && !_authStore.signedIn) {
+            Navigator.pushNamed(context, LoginPage.routeName).then((value) {
+              if (value) {
+                setState(() {
+                  currentTab = index;
+                });
+              }
+            });
+          } else {
+            setState(() {
+              currentTab = index;
+            });
+          }
         },
         currentTab: currentTab,
         items: [
           BottomNavyBarItem(
-            asset: AppIcons.home,
+            asset: AppIcons.gallery,
             title: Text('Home'),
             activeColor: AppColors.dodgerBlue,
             inactiveColor: AppColors.manatee,

@@ -1,11 +1,39 @@
+import 'package:FlutterGalleryApp/app_router.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:flutter/material.dart';
-
-import 'app.dart';
+import 'package:FlutterGalleryApp/store/auth_store.dart';
+import 'package:FlutterGalleryApp/store/connectivity_store.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  // debugRepaintRainbowEnabled = true;
+  AppRouter.setupRouter();
   runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  final ConnectivityStore _connectivityStore = ConnectivityStore();
+  final AuthStore _authStore = AuthStore();
+
+  @override
+  Widget build(BuildContext context) {
+    _authStore.getToken();
+
+    return MultiProvider(
+      providers: [
+        Provider<ConnectivityStore>(create: (_) => _connectivityStore),
+        Provider<AuthStore>(create: (_) => _authStore),
+      ],
+      child: Observer(
+        builder: (_) => MaterialApp(
+          title: 'Skill-branch course work',
+          debugShowCheckedModeBanner: false,
+          theme: buildThemeData(),
+          onGenerateRoute: AppRouter.router.generator,
+        ),
+      ),
+    );
+  }
 }
 
 class ConnectivityOverlay {
