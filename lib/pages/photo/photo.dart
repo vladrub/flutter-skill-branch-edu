@@ -66,7 +66,7 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
         children: [
           Hero(
             tag: _photoPageArguments.heroTag,
-            child: Photo(photoLink: _photoPageArguments.photo),
+            child: RoundedPhoto(photoLink: _photoPageArguments.photo),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

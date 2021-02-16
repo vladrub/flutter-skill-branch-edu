@@ -1,12 +1,12 @@
+import 'package:FlutterGalleryApp/pages/home/screens/feed_screen.dart';
 import 'package:FlutterGalleryApp/pages/login/login.dart';
-import 'package:FlutterGalleryApp/store/auth_store.dart';
 import 'package:FlutterGalleryApp/store/connectivity_store.dart';
+import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 import 'package:FlutterGalleryApp/pages/home/screens/profile_screen.dart';
 import 'package:FlutterGalleryApp/pages/home/screens/search_screen.dart';
-import 'package:FlutterGalleryApp/pages/home/screens/feed_screen.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -23,15 +23,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ConnectivityStore _connectivityStore;
-  AuthStore _authStore;
+  UnsplashStore _unsplashStore;
   ReactionDisposer _disposer;
 
   int currentTab = 0;
 
   List<Widget> pages = [
     FeedScreen(),
-    SearchScreen(),
-    ProfileScreen(),
+    // SearchScreen(),
+    // ProfileScreen(
+    //   userName: 'xps',
+    // ),
+    ProfileScreen(
+      key: UniqueKey(),
+      userName: 'xps',
+    ),
+    ProfileScreen(
+      key: UniqueKey(),
+    ),
   ];
 
   @override
@@ -48,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _connectivityStore = Provider.of<ConnectivityStore>(context);
-    _authStore = Provider.of<AuthStore>(context);
+    _unsplashStore = Provider.of<UnsplashStore>(context);
 
     _disposer = reaction(
       (_) => _connectivityStore.connectivityStream.value,
@@ -63,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         itemCornerRadius: 8,
         curve: Curves.ease,
         onItemSelected: (int index) {
-          if (index == 2 && !_authStore.signedIn) {
+          if (index == 2 && !_unsplashStore.authStore.signedIn) {
             Navigator.pushNamed(context, LoginPage.routeName).then((value) {
               if (value) {
                 setState(() {

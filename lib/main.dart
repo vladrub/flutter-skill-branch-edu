@@ -1,9 +1,9 @@
 import 'package:FlutterGalleryApp/app_router.dart';
+import 'package:FlutterGalleryApp/data/unsplash_repository.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:flutter/material.dart';
-import 'package:FlutterGalleryApp/store/auth_store.dart';
 import 'package:FlutterGalleryApp/store/connectivity_store.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -13,24 +13,22 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ConnectivityStore _connectivityStore = ConnectivityStore();
-  final AuthStore _authStore = AuthStore();
+  final UnsplashStore _unsplashStore = UnsplashStore(UnsplashRepository());
 
   @override
   Widget build(BuildContext context) {
-    _authStore.getToken();
+    _unsplashStore.authStore.getToken();
 
     return MultiProvider(
       providers: [
         Provider<ConnectivityStore>(create: (_) => _connectivityStore),
-        Provider<AuthStore>(create: (_) => _authStore),
+        Provider<UnsplashStore>(create: (_) => _unsplashStore),
       ],
-      child: Observer(
-        builder: (_) => MaterialApp(
-          title: 'Skill-branch course work',
-          debugShowCheckedModeBanner: false,
-          theme: buildThemeData(),
-          onGenerateRoute: AppRouter.router.generator,
-        ),
+      child: MaterialApp(
+        title: 'Skill-branch course work',
+        debugShowCheckedModeBanner: false,
+        theme: buildThemeData(),
+        onGenerateRoute: AppRouter.router.generator,
       ),
     );
   }

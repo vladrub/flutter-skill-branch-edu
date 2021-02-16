@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 
-class Photo extends StatelessWidget {
-  const Photo({
+class RoundedPhoto extends StatelessWidget {
+  const RoundedPhoto({
     this.photoLink,
     Key key,
   }) : super(key: key);

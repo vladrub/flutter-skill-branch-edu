@@ -53,7 +53,7 @@ class _FeedScreenState extends State<FeedScreen> {
           },
           child: Hero(
             tag: 'hero$index',
-            child: Photo(photoLink: kFlutterDash),
+            child: RoundedPhoto(photoLink: kFlutterDash),
           ),
         ),
         _buildPhotoMeta(),

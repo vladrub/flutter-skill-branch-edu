@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:FlutterGalleryApp/data/unsplash_constants.dart';
-import 'package:FlutterGalleryApp/store/auth_store.dart';
+import 'package:FlutterGalleryApp/data/unsplash_repository.dart';
+import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -14,19 +14,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  AuthStore _authStore;
+  UnsplashStore _unsplashStore;
+
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-    _authStore = Provider.of<AuthStore>(context);
+    _unsplashStore = Provider.of<UnsplashStore>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('LogIn page')),
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: UnsplashConstants.authUrl,
+          initialUrl: UnsplashRepository.authUrl,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               RegExp exp = RegExp("(?<==).*");
               var oneTimeCode = exp.stringMatch(url);
 
-              await _authStore.signIn(oneTimeCode);
+              await _unsplashStore.authStore.signIn(oneTimeCode);
               Navigator.pop(context, true);
             }
           },
@@ -47,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               RegExp exp = RegExp("(?<==).*");
               var oneTimeCode = exp.stringMatch(url);
 
-              await _authStore.signIn(oneTimeCode);
+              await _unsplashStore.authStore.signIn(oneTimeCode);
               Navigator.pop(context, true);
             }
           },

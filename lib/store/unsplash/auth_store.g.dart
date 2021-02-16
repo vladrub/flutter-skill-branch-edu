@@ -31,6 +31,21 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  final _$userNameAtom = Atom(name: '_AuthStore.userName');
+
+  @override
+  String get userName {
+    _$userNameAtom.reportRead();
+    return super.userName;
+  }
+
+  @override
+  set userName(String value) {
+    _$userNameAtom.reportWrite(value, super.userName, () {
+      super.userName = value;
+    });
+  }
+
   final _$getTokenAsyncAction = AsyncAction('_AuthStore.getToken');
 
   @override
@@ -59,10 +74,24 @@ mixin _$AuthStore on _AuthStore, Store {
     return _$signOutAsyncAction.run(() => super.signOut());
   }
 
+  final _$_AuthStoreActionController = ActionController(name: '_AuthStore');
+
+  @override
+  void setUserName(String userName) {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+        name: '_AuthStore.setUserName');
+    try {
+      return super.setUserName(userName);
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 token: ${token},
+userName: ${userName},
 signedIn: ${signedIn}
     ''';
   }
