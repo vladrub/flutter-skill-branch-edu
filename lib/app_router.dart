@@ -1,4 +1,5 @@
 import 'package:FlutterGalleryApp/pages/home/home.dart';
+import 'package:FlutterGalleryApp/pages/home/screens/profile_screen.dart';
 import 'package:FlutterGalleryApp/pages/login/login.dart';
 import 'package:FlutterGalleryApp/pages/photo/photo.dart';
 import 'package:fluro/fluro.dart';
@@ -25,6 +26,12 @@ class AppRouter {
     },
   );
 
+  static Handler _profileHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      return ProfileScreen(key: PageStorageKey("${params['id'][0]}"));
+    },
+  );
+
   static void setupRouter() {
     router.define(
       HomePage.routeName,
@@ -39,6 +46,11 @@ class AppRouter {
     router.define(
       PhotoPage.routeName,
       handler: _photoHandler,
+      transitionType: TransitionType.fadeIn,
+    );
+    router.define(
+      "${ProfileScreen.routeName}/:id",
+      handler: _profileHandler,
       transitionType: TransitionType.fadeIn,
     );
   }

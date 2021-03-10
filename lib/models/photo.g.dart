@@ -18,6 +18,9 @@ Photo _$PhotoFromJson(Map<String, dynamic> json) {
     description: json['description'] as String,
     width: json['width'] as int,
     height: json['height'] as int,
+    createdAt: json['created_at'] == null
+        ? null
+        : DateTime.parse(json['created_at'] as String),
     profile: json['user'] == null
         ? null
         : Profile.fromJson(json['user'] as Map<String, dynamic>),
@@ -34,6 +37,7 @@ Map<String, dynamic> _$PhotoToJson(Photo instance) => <String, dynamic>{
       'liked_by_user': instance.likedByUser,
       'urls': instance.urls?.toJson(),
       'user': instance.profile?.toJson(),
+      'created_at': instance.createdAt?.toIso8601String(),
     };
 
 ImageUrl _$ImageUrlFromJson(Map<String, dynamic> json) {

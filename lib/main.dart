@@ -4,20 +4,26 @@ import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/store/connectivity_store.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  String token = await FlutterSecureStorage().read(key: 'token');
   AppRouter.setupRouter();
-  runApp(MyApp());
+  runApp(MyApp(token));
 }
 
 class MyApp extends StatelessWidget {
+  MyApp(this.token);
+
+  final String token;
   final ConnectivityStore _connectivityStore = ConnectivityStore();
   final UnsplashStore _unsplashStore = UnsplashStore(UnsplashRepository());
 
   @override
   Widget build(BuildContext context) {
-    _unsplashStore.authStore.getToken();
+    _unsplashStore.repository.setAuthToken(token);
 
     return MultiProvider(
       providers: [

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:FlutterGalleryApp/models/auth.dart';
+import 'package:FlutterGalleryApp/models/collection.dart';
 import 'package:FlutterGalleryApp/models/photo.dart';
 import 'package:FlutterGalleryApp/models/profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
@@ -12,8 +14,17 @@ class UnsplashRepository {
   // static const String secretKey =
   //     'd89d77d0c47a9c2d699a1d57efcc6c708794b145b729ba92cba57ea5adaa31da';
 
-  static const String accessKey = '8TVzZQqShIvNnurPqFPZLwvf6VRHYL-s5r-KWC57MBo';
-  static const String secretKey = '6uN0FvsCIkPP6JHnqx6ZuPF2WbnG-YJq6DG1K0YA7M0';
+  // static const String accessKey = '8TVzZQqShIvNnurPqFPZLwvf6VRHYL-s5r-KWC57MBo';
+  // static const String secretKey = '6uN0FvsCIkPP6JHnqx6ZuPF2WbnG-YJq6DG1K0YA7M0';
+
+  static const String accessKey = 'BCZKmeaE7DL240HtAKQ8YXzq61lrYD3nJeT0mY8mYzA';
+  static const String secretKey = 'lanbRdEbE0KJmqlnTrWh5fFFstSEeMKju0CijI2Lvfo';
+
+  // static const String accessKey = 'h0A54CMLxKSN9OSk93PHqPEVclPS2lSrQ0lEmsoV1M4';
+  // static const String secretKey = 'N4x_KS_2qO0ISvQgN9Ftg2Fwnqc-d9-kRsr5d1G_4_k';
+
+  // static const String accessKey = '0yopJhCs0XXot7z0piCNY9PTLyX_c8uTTB8tJeC-un4';
+  // static const String secretKey = 'oU-VZKXtUZULJee1PrkDPTC9dQbSZoH_MWEH-TUNKt0';
 
   //authorize url from https://unsplash.com/oauth/applications/{your_app_id}
   static const String authUrl =
@@ -49,6 +60,25 @@ class UnsplashRepository {
     }
   }
 
+  Future<List<Photo>> fetchPhotos({int perPage = 9, int page = 1}) async {
+    try {
+      Response response = await _dio.get(
+        'photos',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
+      List data = response.data;
+      List<Photo> photos = [];
+      data.forEach((photo) => photos.add(Photo.fromJson(photo)));
+      return photos;
+    } on DioError catch (e) {
+      print('Error: ${e.error}');
+      throw Exception('Error: ${e.error}');
+    } catch (e) {
+      print('Error: ${e.error}');
+      throw Exception('Ошибка загрузки фото!');
+    }
+  }
+
   Future<Profile> fetchProfile(String userName) async {
     try {
       Response response = await _dio.get('users/$userName');
@@ -76,9 +106,13 @@ class UnsplashRepository {
     }
   }
 
-  Future<List<Photo>> fetchProfilePhotos(String userName) async {
+  Future<List<Photo>> fetchProfilePhotos(String userName,
+      {int perPage = 9, int page = 1}) async {
     try {
-      Response response = await _dio.get('users/$userName/photos');
+      Response response = await _dio.get(
+        'users/$userName/photos',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
       List data = response.data;
       List<Photo> photos = [];
       data.forEach((photo) => photos.add(Photo.fromJson(photo)));
@@ -89,7 +123,7 @@ class UnsplashRepository {
   }
 
   Future<List<Photo>> fetchProfileLikedPhotos(String userName,
-      {int perPage = 15, int page = 1}) async {
+      {int perPage = 9, int page = 1}) async {
     try {
       Response response = await _dio.get(
         'users/$userName/likes',
@@ -99,6 +133,23 @@ class UnsplashRepository {
       List<Photo> photos = [];
       data.forEach((photo) => photos.add(Photo.fromJson(photo)));
       return photos;
+    } on DioError catch (e) {
+      throw Exception('Error: ${e.error}');
+    }
+  }
+
+  Future<List<Collection>> fetchProfileCollections(String userName,
+      {int perPage = 9, int page = 1}) async {
+    try {
+      Response response = await _dio.get(
+        'users/$userName/collections',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
+      List data = response.data;
+      List<Collection> collections = [];
+      data.forEach(
+          (collection) => collections.add(Collection.fromJson(collection)));
+      return collections;
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
     }

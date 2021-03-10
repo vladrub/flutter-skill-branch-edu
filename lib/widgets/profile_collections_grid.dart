@@ -1,26 +1,30 @@
 import 'package:FlutterGalleryApp/extensions/hex_color.dart';
+import 'package:FlutterGalleryApp/models/collection.dart';
 import 'package:FlutterGalleryApp/models/photo.dart';
-import 'package:FlutterGalleryApp/pages/photo/photo.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePhotosGrid extends StatefulWidget {
-  ProfilePhotosGrid(
-      {this.photos, this.onRefresh, this.onShowMore, this.showLoader, Key key})
+class ProfileCollectionsGrid extends StatefulWidget {
+  ProfileCollectionsGrid(
+      {this.collections,
+      this.onRefresh,
+      this.onShowMore,
+      this.showLoader,
+      Key key})
       : super(key: key);
 
-  final List<Photo> photos;
+  final List<Collection> collections;
   final VoidCallback onRefresh;
   final VoidCallback onShowMore;
   final bool showLoader;
 
   @override
-  _ProfilePhotosGridState createState() => _ProfilePhotosGridState();
+  _ProfileCollectionsGridState createState() => _ProfileCollectionsGridState();
 }
 
-class _ProfilePhotosGridState extends State<ProfilePhotosGrid> {
+class _ProfileCollectionsGridState extends State<ProfileCollectionsGrid> {
   final GlobalKey<RefreshIndicatorState> refresh =
       GlobalKey<RefreshIndicatorState>();
   ScrollController _scrollController;
@@ -50,7 +54,7 @@ class _ProfilePhotosGridState extends State<ProfilePhotosGrid> {
       key: refresh,
       onRefresh: widget.onRefresh,
       child: Container(
-        child: (widget.photos.length != 0)
+        child: (widget.collections.length != 0)
             ? GridView.count(
                 crossAxisCount: 3,
                 padding: EdgeInsets.all(10),
@@ -58,9 +62,25 @@ class _ProfilePhotosGridState extends State<ProfilePhotosGrid> {
                 crossAxisSpacing: 10.0,
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: widget.photos
-                    .map((Photo photo) => _buildPhoto(photo))
-                    .toList(),
+                children: widget.collections.map((Collection collection) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    child: Container(
+                      color: AppColors.grayChateau,
+                      child: CachedNetworkImage(
+                        imageUrl: '${collection.coverPhoto.urls.regular}',
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: (collection.coverPhoto.color != null)
+                              ? HexColor.fromHex(collection.coverPhoto.color)
+                              : Colors.transparent,
+                          child: Loader(),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    ),
+                  );
+                }).toList(),
               )
             : SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -71,37 +91,6 @@ class _ProfilePhotosGridState extends State<ProfilePhotosGrid> {
                   ),
                 ),
               ),
-      ),
-    );
-  }
-
-  Widget _buildPhoto(Photo photo) {
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        PhotoPage.routeName,
-        arguments:
-            PhotoPageArguments(photo: photo, heroTag: 'photo-${photo.id}'),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(7)),
-        child: Container(
-          color: AppColors.grayChateau,
-          child: Hero(
-            tag: 'photo-${photo.id}',
-            child: CachedNetworkImage(
-              imageUrl: '${photo.urls.regular}',
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: (photo.color != null)
-                    ? HexColor.fromHex(photo.color)
-                    : Colors.transparent,
-                child: Loader(),
-              ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
-          ),
-        ),
       ),
     );
   }

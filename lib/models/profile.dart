@@ -1,12 +1,16 @@
+import 'package:FlutterGalleryApp/models/collection.dart';
 import 'package:FlutterGalleryApp/models/photo.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'profile.g.dart';
 
+enum ProfileStoreState { initial, loading, loaded }
+
 @JsonSerializable(explicitToJson: true)
 class Profile extends _Profile with _$Profile {
   Profile({
+    String id,
     String username,
     String name,
     String bio,
@@ -15,11 +19,33 @@ class Profile extends _Profile with _$Profile {
     int followersCount,
     int followingCount,
     List<Photo> photos,
+    int photosPage,
+    bool photosIsLastPage,
     List<Photo> likedPhotos,
-  }) : super(username, name, bio, profileImage, portfolioUrl, followersCount,
-            followingCount) {
+    int likedPhotosPage,
+    bool likedPhotosIsLastPage,
+    List<Collection> collections,
+    int collectionsPage,
+    bool collectionsIsLastPage,
+  }) : super(
+          id,
+          username,
+          name,
+          bio,
+          profileImage,
+          portfolioUrl,
+          followersCount,
+          followingCount,
+          photosPage = 1,
+          photosIsLastPage = false,
+          likedPhotosPage = 1,
+          likedPhotosIsLastPage = false,
+          collectionsPage = 1,
+          collectionsIsLastPage = false,
+        ) {
     if (photos != null) this.photos = ObservableList.of(photos);
     if (likedPhotos != null) this.likedPhotos = ObservableList.of(likedPhotos);
+    if (collections != null) this.collections = ObservableList.of(collections);
   }
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
@@ -28,10 +54,26 @@ class Profile extends _Profile with _$Profile {
 }
 
 abstract class _Profile with Store {
-  _Profile(this.username, this.name, this.bio, this.profileImage,
-      this.portfolioUrl, this.followersCount, this.followingCount,
-      {this.photos, this.likedPhotos});
+  _Profile(
+    this.id,
+    this.username,
+    this.name,
+    this.bio,
+    this.profileImage,
+    this.portfolioUrl,
+    this.followersCount,
+    this.followingCount,
+    this.photosPage,
+    this.photosIsLastPage,
+    this.likedPhotosPage,
+    this.likedPhotosIsLastPage,
+    this.collectionsPage,
+    this.collectionsIsLastPage, {
+    this.photos,
+    this.likedPhotos,
+  });
 
+  String id;
   String username;
   String name;
   String bio;
@@ -41,7 +83,28 @@ abstract class _Profile with Store {
   ObservableList<Photo> photos = ObservableList<Photo>.of([]);
 
   @observable
+  int photosPage = 1;
+
+  @observable
+  bool photosIsLastPage = false;
+
+  @observable
   ObservableList<Photo> likedPhotos = ObservableList<Photo>.of([]);
+
+  @observable
+  int likedPhotosPage = 1;
+
+  @observable
+  bool likedPhotosIsLastPage = false;
+
+  @observable
+  ObservableList<Collection> collections = ObservableList<Collection>.of([]);
+
+  @observable
+  int collectionsPage = 1;
+
+  @observable
+  bool collectionsIsLastPage = false;
 
   @JsonKey(name: 'portfolio_url')
   String portfolioUrl;
@@ -54,6 +117,18 @@ abstract class _Profile with Store {
 
   @JsonKey(name: 'following_count')
   int followingCount;
+
+  // @observable
+  // ObservableFuture<Profile> _profileFuture;
+
+  // @observable
+  // ObservableFuture<List<Photo>> _profilePhotosFuture;
+
+  // @observable
+  // ObservableFuture<List<Photo>> _profileLikedPhotosFuture;
+
+  // @observable
+  // ObservableFuture<List<Collection>> _profileCollectionsFuture;
 }
 
 @JsonSerializable(explicitToJson: true)

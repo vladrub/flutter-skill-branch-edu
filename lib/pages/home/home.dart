@@ -30,14 +30,13 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> pages = [
     FeedScreen(),
-    // SearchScreen(),
+    SearchScreen(),
     // ProfileScreen(
     //   userName: 'xps',
     // ),
-    ProfileScreen(
-      key: UniqueKey(),
-      userName: 'xps',
-    ),
+    // ProfileScreen(
+    //   key: UniqueKey(),
+    // ),
     ProfileScreen(
       key: UniqueKey(),
     ),

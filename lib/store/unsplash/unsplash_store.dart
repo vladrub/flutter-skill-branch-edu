@@ -1,5 +1,6 @@
 import 'package:FlutterGalleryApp/data/unsplash_repository.dart';
 import 'package:FlutterGalleryApp/store/unsplash/auth_store.dart';
+import 'package:FlutterGalleryApp/store/unsplash/photos_store.dart';
 import 'package:FlutterGalleryApp/store/unsplash/profile_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -14,9 +15,11 @@ abstract class _UnsplashStore with Store {
   UnsplashRepository repository;
   AuthStore authStore;
   ProfileStore profileStore;
+  PhotosStore photosStore;
 
   _UnsplashStore(this.repository) {
     authStore = AuthStore(unsplashStore: this);
     profileStore = ProfileStore(unsplashStore: this);
+    photosStore = PhotosStore(unsplashStore: this);
   }
 }

@@ -20,6 +20,9 @@ class Photo {
   @JsonKey(name: 'user')
   Profile profile;
 
+  @JsonKey(name: 'created_at')
+  DateTime createdAt;
+
   Photo({
     this.id,
     this.color,
@@ -29,6 +32,7 @@ class Photo {
     this.description,
     this.width,
     this.height,
+    this.createdAt,
     this.profile,
   });
 

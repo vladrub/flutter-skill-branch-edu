@@ -1,7 +1,12 @@
+import 'package:FlutterGalleryApp/models/photo.dart';
+import 'package:FlutterGalleryApp/pages/home/screens/profile_screen.dart';
 import 'package:FlutterGalleryApp/pages/photo/photo.dart';
+import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 const String kFlutterDash = 'https://picsum.photos/900/600';
 
@@ -13,50 +18,49 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+  UnsplashStore _unsplashStore;
+
+  void fetchPhotos() async {
+    await _unsplashStore.photosStore.fetchPhotos();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _unsplashStore = Provider.of<UnsplashStore>(context);
+    fetchPhotos();
+
     return Scaffold(
-      body: ListView.builder(itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: [
-            _buildItem(index),
-            Divider(
-              thickness: 2.0,
-              color: AppColors.mercury,
-            ),
-          ],
+      body: Observer(builder: (_) {
+        return ListView.builder(
+          itemCount: _unsplashStore.photosStore.photos.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              children: [
+                _buildItem(_unsplashStore.photosStore.photos[index]),
+                Divider(
+                  thickness: 2.0,
+                  color: AppColors.mercury,
+                ),
+              ],
+            );
+          },
         );
       }),
     );
   }
 
-  Widget _buildItem(index) {
+  Widget _buildItem(Photo photo) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              '/photo',
-              arguments: PhotoPageArguments(
-                altDescription: 'Description',
-                heroTag: 'hero$index',
-                userName: '@kaparray',
-                name: 'Name',
-                photo: 'https://picsum.photos/900/600',
-                userPhoto:
-                    'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
-                routeSettings: RouteSettings(arguments: 'Some title'),
-              ),
-            );
-          },
+          onTap: () {},
           child: Hero(
-            tag: 'hero$index',
-            child: RoundedPhoto(photoLink: kFlutterDash),
+            tag: 'photo-${photo.id}',
+            child: RoundedPhoto(photo: photo),
           ),
         ),
-        _buildPhotoMeta(),
+        _buildPhotoMeta(photo),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
@@ -73,37 +77,51 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget _buildPhotoMeta() {
+  Widget _buildPhotoMeta(Photo photo) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              UserAvatar(
-                avatarLink:
-                    'https://avatars2.githubusercontent.com/u/4814848?s=460&u=fa13ef42405f5e5b048aab53e80e612d0cfa198c&v=4',
-              ),
-              SizedBox(width: 6),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Vladislav Rubanovich',
-                    style: Theme.of(context).textTheme.headline2,
+          GestureDetector(
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => ProfileScreen(
+                    userName: photo.profile.username,
+                    key: PageStorageKey("profile-${photo.profile.id}"),
                   ),
-                  Text(
-                    '@rubdev',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(color: AppColors.manatee),
-                  )
-                ],
-              )
-            ],
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                UserAvatar(
+                  avatarLink: (photo.profile.profileImage.medium != null)
+                      ? photo.profile.profileImage.medium
+                      : photo.profile.profileImage.small,
+                ),
+                SizedBox(width: 6),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      photo.profile.name,
+                      style: Theme.of(context).textTheme.headline2,
+                    ),
+                    Text(
+                      "@${photo.profile.username}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: AppColors.manatee),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
           LikeButton(
             likeCount: 101,

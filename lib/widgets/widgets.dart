@@ -5,4 +5,6 @@ export 'bottom_navy_bar.dart';
 export 'expandable_text.dart';
 export 'profile_info.dart';
 export 'profile_photos_grid.dart';
+export 'profile_collections_grid.dart';
 export 'loader.dart';
+export 'photo_button.dart';

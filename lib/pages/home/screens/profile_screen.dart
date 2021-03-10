@@ -1,21 +1,32 @@
-import 'package:FlutterGalleryApp/models/photo.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/store/unsplash/profile_store.dart';
 import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
+import 'package:FlutterGalleryApp/widgets/profile_collections_grid.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
+class ProfileScreenArguments {
+  ProfileScreenArguments({
+    this.routeSettings,
+    this.heroTag,
+    this.userName,
+  });
+
+  final String heroTag;
+  final String userName;
+  final RouteSettings routeSettings;
+}
+
 class ProfileScreen extends StatefulWidget {
+  static const routeName = '/profile';
+
   ProfileScreen({
     Key key,
-    this.showBackButton = false,
     this.userName,
   }) : super(key: key);
 
-  final bool showBackButton;
   final String userName;
 
   @override
@@ -24,15 +35,17 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
+  ProfileScreenArguments _photoPageArguments;
   UnsplashStore _unsplashStore;
   TabController _tabController;
   ScrollController _scrollViewController;
-
-  final GlobalKey<RefreshIndicatorState> refresh2 =
-      GlobalKey<RefreshIndicatorState>();
+  String _userName;
 
   @override
   void initState() {
+    if (_photoPageArguments != null) {
+      _userName = _photoPageArguments.userName;
+    }
     _tabController = TabController(length: 3, vsync: this);
     _scrollViewController = ScrollController();
 
@@ -41,7 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen>
         case 0:
           break;
         case 1:
-          _unsplashStore.profileStore.fetchProfileLikedPhotos();
+          if (_unsplashStore.profileStore.profile.likedPhotos == null &&
+              _unsplashStore.profileStore.likedPhotosState !=
+                  ProfileStoreState.loading) {
+            _unsplashStore.profileStore.fetchProfileLikedPhotos();
+          }
           break;
       }
     });
@@ -60,32 +77,27 @@ class _ProfileScreenState extends State<ProfileScreen>
     await _unsplashStore.profileStore.fetchProfile(userName: widget.userName);
   }
 
-  void fetchProfileLikedPhotos() async {
-    await _unsplashStore.profileStore.fetchProfileLikedPhotos();
-  }
-
   @override
   Widget build(BuildContext context) {
     _unsplashStore = Provider.of<UnsplashStore>(context);
     fetchProfile();
 
     return Scaffold(
-      body: NestedScrollView(
+      body: CustomScrollView(
         controller: _scrollViewController,
-        headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
-          return [
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              forceElevated: boxIsScrolled,
-              elevation: 0.0,
-              leading: (widget.showBackButton)
-                  ? IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  : null,
-              actions: [
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            floating: false,
+            elevation: 0.0,
+            leading: (_userName != null)
+                ? IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                : null,
+            actions: [
+              if (_userName != null)
                 PopupMenuButton(
                   onSelected: (val) async {
                     if (val == 'logout') {
@@ -102,29 +114,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ];
                   },
                 ),
-              ],
-              title: Text('Profile'),
+            ],
+            title: Text('Profile'),
+          ),
+          SliverToBoxAdapter(
+            child: _buildProfile(),
+          ),
+          SliverPersistentHeader(
+            delegate: _SliverTabBarDelegate(
+              _buildTabBar(),
             ),
-            SliverToBoxAdapter(
-              child: _buildProfile(),
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverTabBarDelegate(
-                _buildTabBar(),
-              ),
-              pinned: true,
-            ),
-          ];
-        },
-        body: _buildTabs(),
-        // body: CustomScrollView(slivers: [
-        //   // SliverOverlapInjector(
-        //   //   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        //   // ),
-        //   SliverToBoxAdapter(
-        //     child: _buildTabs(),
-        //   ),
-        // ]),
+            pinned: true,
+            floating: false,
+          ),
+          SliverFillRemaining(
+            child: _buildTabs(),
+          )
+        ],
       ),
     );
   }
@@ -154,41 +160,75 @@ class _ProfileScreenState extends State<ProfileScreen>
     return TabBarView(
       controller: _tabController,
       children: [
-        Container(
-          child: Observer(builder: (_) {
-            if (_unsplashStore.profileStore.photosState ==
-                ProfileStoreState.loaded) {
-              return ProfilePhotosGrid(
-                _unsplashStore.profileStore.profile.photos,
-                () {
-                  return Future.delayed(Duration(seconds: 2), () {});
-                },
-              );
-            } else {
-              return Loader();
-            }
-          }),
-        ),
-        Container(
-          child: Observer(builder: (_) {
-            if (_unsplashStore.profileStore.likedPhotosState ==
-                ProfileStoreState.loaded) {
-              return ProfilePhotosGrid(
-                _unsplashStore.profileStore.profile.likedPhotos,
-                () async {
-                  await _unsplashStore.profileStore
-                      .fetchProfileLikedPhotos(reload: true);
-                },
-              );
-            } else {
-              return Loader();
-            }
-          }),
-        ),
-        Container(
-          color: AppColors.manatee,
-          child: Text('Tab #3'),
-        ),
+        Observer(builder: (_) {
+          if (_unsplashStore.profileStore.profile != null &&
+              _unsplashStore.profileStore.profile.photos != null) {
+            return ProfilePhotosGrid(
+              photos: _unsplashStore.profileStore.profile.photos,
+              onRefresh: () async {
+                await _unsplashStore.profileStore
+                    .fetchProfilePhotos(reFresh: true);
+              },
+              onShowMore: () {
+                if (_unsplashStore.profileStore.photosState !=
+                        ProfileStoreState.loading &&
+                    !_unsplashStore.profileStore.profile.photosIsLastPage) {
+                  _unsplashStore.profileStore.fetchProfilePhotos();
+                }
+              },
+            );
+          } else {
+            return Loader();
+          }
+        }),
+        Observer(builder: (_) {
+          print(_unsplashStore.profileStore.profile.likedPhotos);
+          if (_unsplashStore.profileStore.profile.likedPhotos != null) {
+            return ProfilePhotosGrid(
+              photos: _unsplashStore.profileStore.profile.likedPhotos,
+              onRefresh: () async {
+                await _unsplashStore.profileStore
+                    .fetchProfileLikedPhotos(reFresh: true);
+              },
+              showLoader:
+                  !_unsplashStore.profileStore.profile.likedPhotosIsLastPage,
+              onShowMore: () {
+                if (_unsplashStore.profileStore.likedPhotosState !=
+                        ProfileStoreState.loading &&
+                    !_unsplashStore
+                        .profileStore.profile.likedPhotosIsLastPage) {
+                  _unsplashStore.profileStore.fetchProfileLikedPhotos();
+                }
+              },
+            );
+          } else {
+            return Loader();
+          }
+        }),
+        Observer(builder: (_) {
+          print(_unsplashStore.profileStore.profile.collections);
+          if (_unsplashStore.profileStore.profile.collections != null) {
+            return ProfileCollectionsGrid(
+              collections: _unsplashStore.profileStore.profile.collections,
+              onRefresh: () async {
+                await _unsplashStore.profileStore
+                    .fetchProfileCollections(reFresh: true);
+              },
+              showLoader:
+                  !_unsplashStore.profileStore.profile.collectionsIsLastPage,
+              onShowMore: () {
+                if (_unsplashStore.profileStore.collectionsState !=
+                        ProfileStoreState.loading &&
+                    !_unsplashStore
+                        .profileStore.profile.collectionsIsLastPage) {
+                  _unsplashStore.profileStore.fetchProfileCollections();
+                }
+              },
+            );
+          } else {
+            return Loader();
+          }
+        }),
       ],
     );
   }

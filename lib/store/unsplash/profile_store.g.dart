@@ -36,6 +36,13 @@ mixin _$ProfileStore on _ProfileStore, Store {
           Computed<ProfileStoreState>(() => super.likedPhotosState,
               name: '_ProfileStore.likedPhotosState'))
       .value;
+  Computed<ProfileStoreState> _$collectionsStateComputed;
+
+  @override
+  ProfileStoreState get collectionsState => (_$collectionsStateComputed ??=
+          Computed<ProfileStoreState>(() => super.collectionsState,
+              name: '_ProfileStore.collectionsState'))
+      .value;
 
   final _$_profileFutureAtom = Atom(name: '_ProfileStore._profileFuture');
 
@@ -83,6 +90,23 @@ mixin _$ProfileStore on _ProfileStore, Store {
     _$_profileLikedPhotosFutureAtom
         .reportWrite(value, super._profileLikedPhotosFuture, () {
       super._profileLikedPhotosFuture = value;
+    });
+  }
+
+  final _$_profileCollectionsFutureAtom =
+      Atom(name: '_ProfileStore._profileCollectionsFuture');
+
+  @override
+  ObservableFuture<List<Collection>> get _profileCollectionsFuture {
+    _$_profileCollectionsFutureAtom.reportRead();
+    return super._profileCollectionsFuture;
+  }
+
+  @override
+  set _profileCollectionsFuture(ObservableFuture<List<Collection>> value) {
+    _$_profileCollectionsFutureAtom
+        .reportWrite(value, super._profileCollectionsFuture, () {
+      super._profileCollectionsFuture = value;
     });
   }
 
@@ -143,18 +167,29 @@ mixin _$ProfileStore on _ProfileStore, Store {
       AsyncAction('_ProfileStore.fetchProfilePhotos');
 
   @override
-  Future<void> fetchProfilePhotos() {
-    return _$fetchProfilePhotosAsyncAction
-        .run(() => super.fetchProfilePhotos());
+  Future<void> fetchProfilePhotos({bool reFresh = false, int perPage = 9}) {
+    return _$fetchProfilePhotosAsyncAction.run(
+        () => super.fetchProfilePhotos(reFresh: reFresh, perPage: perPage));
   }
 
   final _$fetchProfileLikedPhotosAsyncAction =
       AsyncAction('_ProfileStore.fetchProfileLikedPhotos');
 
   @override
-  Future<void> fetchProfileLikedPhotos({bool reload = false}) {
-    return _$fetchProfileLikedPhotosAsyncAction
-        .run(() => super.fetchProfileLikedPhotos(reload: reload));
+  Future<void> fetchProfileLikedPhotos(
+      {bool reFresh = false, int perPage = 9}) {
+    return _$fetchProfileLikedPhotosAsyncAction.run(() =>
+        super.fetchProfileLikedPhotos(reFresh: reFresh, perPage: perPage));
+  }
+
+  final _$fetchProfileCollectionsAsyncAction =
+      AsyncAction('_ProfileStore.fetchProfileCollections');
+
+  @override
+  Future<void> fetchProfileCollections(
+      {bool reFresh = false, int perPage = 9}) {
+    return _$fetchProfileCollectionsAsyncAction.run(() =>
+        super.fetchProfileCollections(reFresh: reFresh, perPage: perPage));
   }
 
   @override
@@ -166,7 +201,8 @@ userName: ${userName},
 profile: ${profile},
 state: ${state},
 photosState: ${photosState},
-likedPhotosState: ${likedPhotosState}
+likedPhotosState: ${likedPhotosState},
+collectionsState: ${collectionsState}
     ''';
   }
 }

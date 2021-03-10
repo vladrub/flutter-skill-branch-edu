@@ -25,7 +25,6 @@ class _LikeButtonState extends State<LikeButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // behavior: HitTestBehavior.opaque,
       onTap: () {
         isLiked = !isLiked;
         if (isLiked) {
@@ -40,9 +39,12 @@ class _LikeButtonState extends State<LikeButton> {
         padding: EdgeInsets.all(8),
         child: Row(
           children: [
-            Icon(isLiked ? AppIcons.like_fill : AppIcons.like),
+            Icon(
+              isLiked ? AppIcons.like_fill : AppIcons.like,
+              size: 16,
+            ),
             SizedBox(
-              width: 4.21,
+              width: 10,
             ),
             Text(likeCount.toString())
           ],
