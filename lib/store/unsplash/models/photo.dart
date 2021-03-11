@@ -1,8 +1,9 @@
 import 'package:FlutterGalleryApp/data/unsplash_repository.dart';
 import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
+
+import '../photos_store.dart';
 
 part 'photo.g.dart';
 
@@ -78,6 +79,24 @@ abstract class _Photo with Store {
   @JsonKey(name: 'created_at')
   DateTime createdAt;
 
+  @observable
+  ObservableFuture<List<Photo>> _relatedPhotosFuture;
+
+  @JsonKey(ignore: true)
+  @observable
+  ObservableList<Photo> relatedPhotos = ObservableList<Photo>.of([]);
+
+  @computed
+  PhotosStoreState get relatedPhotosState {
+    if (_relatedPhotosFuture == null ||
+        _relatedPhotosFuture.status == FutureStatus.rejected) {
+      return PhotosStoreState.initial;
+    }
+    return _relatedPhotosFuture.status == FutureStatus.pending
+        ? PhotosStoreState.loading
+        : PhotosStoreState.loaded;
+  }
+
   @action
   Future<void> like() async {
     try {
@@ -97,6 +116,23 @@ abstract class _Photo with Store {
       likes--;
     } on Exception catch (_) {
       throw Exception('Ошибка лайка фото!');
+    }
+  }
+
+  @action
+  Future<void> fetchRelatedPhotos() async {
+    try {
+      print('Загрузка связанных фото');
+
+      _relatedPhotosFuture =
+          ObservableFuture(unsplashRepository.fetchRelatedPhotos(id));
+
+      var _photos = await _relatedPhotosFuture;
+
+      relatedPhotos.addAll(_photos);
+      print('Добавленно связанных фото ${_photos.length}');
+    } on Exception catch (_) {
+      throw Exception('Ошибка загрузки связанных фото!');
     }
   }
 }

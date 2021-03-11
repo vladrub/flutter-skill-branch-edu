@@ -22,7 +22,7 @@ class AppIcons {
 
   static const IconData gallery =
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData search =
+  static const IconData search_1 =
       IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData connection =
       IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -36,8 +36,12 @@ class AppIcons {
       IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData like_fill =
       IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData label =
+      IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData home =
       IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData search =
+      IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bookmark_empty =
       IconData(0xf097, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

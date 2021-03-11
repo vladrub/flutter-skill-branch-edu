@@ -35,6 +35,38 @@ ThemeData buildThemeData() {
         ),
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: const OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(10.0),
+        ),
+      ),
+      enabledBorder: const OutlineInputBorder(
+        borderSide: const BorderSide(color: AppColors.lightGray, width: 0.0),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(10.0),
+        ),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: const BorderSide(color: AppColors.blue, width: 0.0),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(10.0),
+        ),
+      ),
+      filled: true,
+      fillColor: AppColors.lightGray,
+      contentPadding: const EdgeInsets.symmetric(vertical: 5),
+      isDense: true,
+      hintStyle: TextStyle(
+        fontSize: 17,
+        height: 22 / 17,
+        fontFamily: 'Roboto',
+        color: AppColors.manatee,
+        fontWeight: FontWeight.normal,
+        fontStyle: FontStyle.normal,
+        letterSpacing: -0.41,
+      ),
+    ),
     primarySwatch: Colors.blue,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );

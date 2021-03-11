@@ -68,6 +68,7 @@ abstract class _Profile with Store {
     this.collectionsIsLastPage, {
     this.photos,
     this.likedPhotos,
+    this.collections,
   });
 
   String id;

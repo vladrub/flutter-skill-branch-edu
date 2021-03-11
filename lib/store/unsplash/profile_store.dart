@@ -40,11 +40,6 @@ abstract class _ProfileStore with Store {
           orElse: () => null);
 
   @computed
-  Profile get userProfile => profiles.firstWhere(
-      (profile) => profile.username == unsplashStore.authStore.userName,
-      orElse: () => null);
-
-  @computed
   ProfileStoreState get state {
     if (profile != null) return ProfileStoreState.loaded;
     if (_profileFuture == null ||

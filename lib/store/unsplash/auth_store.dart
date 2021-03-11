@@ -38,7 +38,8 @@ abstract class _AuthStore with Store {
 
   @action
   Future<void> signIn(String oneTimeCode) async {
-    UnsplashRepository.doLogin(oneTimeCode: oneTimeCode).then((value) async {
+    await UnsplashRepository.doLogin(oneTimeCode: oneTimeCode)
+        .then((value) async {
       await setToken(value.accessToken);
     });
   }
@@ -46,6 +47,7 @@ abstract class _AuthStore with Store {
   @action
   Future<void> signOut() async {
     token = null;
+    unsplashStore.repository.removeAuthToken();
     await _secureStorage.delete(key: 'token');
   }
 

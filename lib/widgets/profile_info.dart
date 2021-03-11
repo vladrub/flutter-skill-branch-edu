@@ -117,11 +117,16 @@ class ProfileInfo extends StatelessWidget {
                         color: AppColors.dodgerBlue,
                       ),
                       SizedBox(width: 7),
-                      Text(
-                        "${profile.location}",
-                        style: Theme.of(context).textTheme.headline5.copyWith(
-                              letterSpacing: -0.08,
-                            ),
+                      Container(
+                        width: 220,
+                        child: Text(
+                          "${profile.location}",
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                letterSpacing: -0.08,
+                              ),
+                        ),
                       )
                     ],
                   ),
@@ -137,11 +142,17 @@ class ProfileInfo extends StatelessWidget {
                       SizedBox(width: 8),
                       InkWell(
                         onTap: () => launch(profile.portfolioUrl),
-                        child: Text(
-                          "${profile.portfolioUrl}",
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                                letterSpacing: -0.08,
-                              ),
+                        child: Container(
+                          width: 220,
+                          child: Text(
+                            "${profile.portfolioUrl}",
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style:
+                                Theme.of(context).textTheme.headline5.copyWith(
+                                      letterSpacing: -0.08,
+                                    ),
+                          ),
                         ),
                       )
                     ],

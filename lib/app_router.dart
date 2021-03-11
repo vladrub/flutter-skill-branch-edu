@@ -1,6 +1,7 @@
 import 'package:FlutterGalleryApp/pages/home/home.dart';
 import 'package:FlutterGalleryApp/pages/home/screens/profile_screen.dart';
 import 'package:FlutterGalleryApp/pages/login/login.dart';
+import 'package:FlutterGalleryApp/pages/photo/collection.dart';
 import 'package:FlutterGalleryApp/pages/photo/photo.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,12 @@ class AppRouter {
     },
   );
 
+  static Handler _collectionHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+      return CollectionPage();
+    },
+  );
+
   static void setupRouter() {
     router.define(
       HomePage.routeName,
@@ -51,6 +58,12 @@ class AppRouter {
     router.define(
       "${ProfileScreen.routeName}/:id",
       handler: _profileHandler,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      CollectionPage.routeName,
+      handler: _collectionHandler,
       transitionType: TransitionType.fadeIn,
     );
   }

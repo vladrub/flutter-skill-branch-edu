@@ -1,7 +1,10 @@
+import 'package:FlutterGalleryApp/pages/login/login.dart';
 import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
+import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 class LikeButton extends StatefulWidget {
   LikeButton({this.photo, Key key}) : super(key: key);
@@ -13,15 +16,23 @@ class LikeButton extends StatefulWidget {
 }
 
 class _LikeButtonState extends State<LikeButton> {
+  UnsplashStore _unsplashStore;
+
   @override
   Widget build(BuildContext context) {
+    _unsplashStore = Provider.of<UnsplashStore>(context);
+
     return Observer(
       builder: (_) => GestureDetector(
         onTap: () {
-          if (widget.photo.likedByUser) {
-            widget.photo.unlike();
+          if (!_unsplashStore.authStore.signedIn) {
+            Navigator.pushNamed(context, LoginPage.routeName);
           } else {
-            widget.photo.like();
+            if (widget.photo.likedByUser) {
+              widget.photo.unlike();
+            } else {
+              widget.photo.like();
+            }
           }
         },
         child: Padding(

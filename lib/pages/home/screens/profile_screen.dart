@@ -60,6 +60,14 @@ class _ProfileScreenState extends State<ProfileScreen>
             _unsplashStore.profileStore.fetchProfileLikedPhotos();
           }
           break;
+        case 2:
+          print(_unsplashStore.profileStore.profile.collections == null);
+          if (_unsplashStore.profileStore.profile.collections == null &&
+              _unsplashStore.profileStore.collectionsState !=
+                  ProfileStoreState.loading) {
+            _unsplashStore.profileStore.fetchProfileCollections();
+          }
+          break;
       }
     });
 

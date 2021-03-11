@@ -16,11 +16,11 @@ class UnsplashRepository {
   // static const String accessKey = 'BCZKmeaE7DL240HtAKQ8YXzq61lrYD3nJeT0mY8mYzA';
   // static const String secretKey = 'lanbRdEbE0KJmqlnTrWh5fFFstSEeMKju0CijI2Lvfo';
 
-  static const String accessKey = 'h0A54CMLxKSN9OSk93PHqPEVclPS2lSrQ0lEmsoV1M4';
-  static const String secretKey = 'N4x_KS_2qO0ISvQgN9Ftg2Fwnqc-d9-kRsr5d1G_4_k';
+  // static const String accessKey = 'h0A54CMLxKSN9OSk93PHqPEVclPS2lSrQ0lEmsoV1M4';
+  // static const String secretKey = 'N4x_KS_2qO0ISvQgN9Ftg2Fwnqc-d9-kRsr5d1G_4_k';
 
-  // static const String accessKey = '0yopJhCs0XXot7z0piCNY9PTLyX_c8uTTB8tJeC-un4';
-  // static const String secretKey = 'oU-VZKXtUZULJee1PrkDPTC9dQbSZoH_MWEH-TUNKt0';
+  static const String accessKey = '0yopJhCs0XXot7z0piCNY9PTLyX_c8uTTB8tJeC-un4';
+  static const String secretKey = 'oU-VZKXtUZULJee1PrkDPTC9dQbSZoH_MWEH-TUNKt0';
 
   //authorize url from https://unsplash.com/oauth/applications/{your_app_id}
   static const String authUrl =
@@ -41,6 +41,11 @@ class UnsplashRepository {
     if (token == null) return;
     authToken = token;
     _dio.options.headers = {'Authorization': 'Bearer $token'};
+  }
+
+  void removeAuthToken() {
+    authToken = null;
+    _dio.options.headers = {'Authorization': 'Client-ID $accessKey'};
   }
 
   static Future<Auth> doLogin({String oneTimeCode}) async {
@@ -157,9 +162,32 @@ class UnsplashRepository {
       );
       List data = response.data;
       List<Collection> collections = [];
-      data.forEach(
-          (collection) => collections.add(Collection.fromJson(collection)));
+      data.forEach((json) {
+        var _collection = Collection.fromJson(json);
+        _collection.unsplashRepository = this;
+        collections.add(_collection);
+      });
       return collections;
+    } on DioError catch (e) {
+      throw Exception('Error: ${e.error}');
+    }
+  }
+
+  Future<List<Photo>> fetchCollectionPhotos(String collectionId,
+      {int perPage = 9, int page = 1}) async {
+    try {
+      Response response = await _dio.get(
+        'collections/$collectionId/photos',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
+      List data = response.data;
+      List<Photo> photos = [];
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
+      return photos;
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
     }
@@ -169,7 +197,7 @@ class UnsplashRepository {
     if (authToken == '') Exception('Error: Not authorized!');
 
     try {
-      await _dio.post("https://api.unsplash.com/photos/$photoId/like");
+      await _dio.post("photos/$photoId/like");
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
     }
@@ -179,61 +207,50 @@ class UnsplashRepository {
     if (authToken == '') Exception('Error: Not authorized!');
 
     try {
-      await _dio.delete("https://api.unsplash.com/photos/$photoId/like");
+      await _dio.delete("photos/$photoId/like");
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
     }
   }
 
-  // static Future<PhotoList> getPhotos(int page, int perPage) async {
-  //   var response = await http.get(
-  //       'https://api.unsplash.com/photos?page=$page&per_page=$perPage',
-  //       headers: {'Authorization': 'Bearer $authToken'});
+  Future<List<Photo>> fetchRelatedPhotos(String photoId,
+      {int perPage = 20, int page = 1}) async {
+    try {
+      Response response = await _dio.get(
+        'https://unsplash.com/napi/photos/$photoId/related',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
+      List data = response.data['results'];
+      List<Photo> photos = [];
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
+      return photos;
+    } on DioError catch (e) {
+      print(e);
+      throw Exception('Error: ${e.error}');
+    }
+  }
 
-  //   if (response.statusCode >= 200 && response.statusCode < 300) {
-  //     return PhotoList.fromJson(json.decode(response.body));
-  //   } else {
-  //     throw Exception('Error: ${response.reasonPhrase}');
-  //   }
-  // }
-
-  // static Future<Photo> getRandomPhoto() async {
-  //   var response = await http.get('https://api.unsplash.com/photos/random',
-  //       headers: {'Authorization': 'Bearer $authToken'});
-
-  //   if (response.statusCode >= 200 && response.statusCode < 300) {
-  //     return Photo.fromJson(json.decode(response.body));
-  //   } else {
-  //     throw Exception('Error: ${response.reasonPhrase}');
-  //   }
-  // }
-
-  // static Future<bool> likePhoto(String photoId) async {
-  //   var response = await http
-  //       .post('https://api.unsplash.com/photos/$photoId/like', headers: {
-  //     'Authorization': 'Bearer $authToken',
-  //   });
-
-  //   print(response.body);
-  //   print(response.reasonPhrase);
-
-  //   if (response.statusCode >= 200 && response.statusCode < 300) {
-  //     return true; //returns 201 - Created
-  //   } else {
-  //     throw Exception('Error: ${response.reasonPhrase}');
-  //   }
-  // }
-
-  // static Future<bool> unlikePhoto(String photoId) async {
-  //   var response = await http
-  //       .delete('https://api.unsplash.com/photos/$photoId/like', headers: {
-  //     'Authorization': 'Bearer $authToken',
-  //   });
-
-  //   if (response.statusCode >= 200 && response.statusCode < 300) {
-  //     return true; //returns 201 - Created
-  //   } else {
-  //     throw Exception('Error: ${response.reasonPhrase}');
-  //   }
-  // }
+  Future<List<Photo>> search(String query,
+      {int perPage = 15, int page = 1}) async {
+    try {
+      Response response = await _dio.get(
+        "search/photos",
+        queryParameters: {'query': query, 'per_page': perPage, 'page': page},
+      );
+      List data = response.data['results'];
+      List<Photo> photos = [];
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
+      return photos;
+    } on DioError catch (e) {
+      throw Exception('Error: ${e.error}');
+    }
+  }
 }

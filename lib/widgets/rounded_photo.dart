@@ -1,3 +1,4 @@
+import 'package:FlutterGalleryApp/extensions/hex_color.dart';
 import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/widgets/loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,10 +8,12 @@ import 'package:FlutterGalleryApp/res/res.dart';
 class RoundedPhoto extends StatelessWidget {
   const RoundedPhoto({
     this.photo,
+    this.borderRadius = 17.0,
     Key key,
   }) : super(key: key);
 
   final Photo photo;
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class RoundedPhoto extends StatelessWidget {
 
     return Container(
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(17)),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
         child: Container(
           color: AppColors.grayChateau,
           child: CachedNetworkImage(
@@ -29,7 +32,12 @@ class RoundedPhoto extends StatelessWidget {
             width: widthContainer,
             height: heightContainer,
             fit: BoxFit.cover,
-            placeholder: (context, url) => Loader(),
+            placeholder: (context, url) => Container(
+              color: (photo.color != null)
+                  ? HexColor.fromHex(photo.color)
+                  : Colors.transparent,
+              child: Loader(),
+            ),
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),

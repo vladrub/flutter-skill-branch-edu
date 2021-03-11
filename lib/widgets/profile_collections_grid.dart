@@ -1,4 +1,5 @@
 import 'package:FlutterGalleryApp/extensions/hex_color.dart';
+import 'package:FlutterGalleryApp/pages/photo/collection.dart';
 import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/loader.dart';
@@ -62,23 +63,7 @@ class _ProfileCollectionsGridState extends State<ProfileCollectionsGrid> {
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: widget.collections.map((Collection collection) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    child: Container(
-                      color: AppColors.grayChateau,
-                      child: CachedNetworkImage(
-                        imageUrl: '${collection.coverPhoto.urls.regular}',
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: (collection.coverPhoto.color != null)
-                              ? HexColor.fromHex(collection.coverPhoto.color)
-                              : Colors.transparent,
-                          child: Loader(),
-                        ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
-                    ),
-                  );
+                  return _buildCollection(collection);
                 }).toList(),
               )
             : SingleChildScrollView(
@@ -90,6 +75,36 @@ class _ProfileCollectionsGridState extends State<ProfileCollectionsGrid> {
                   ),
                 ),
               ),
+      ),
+    );
+  }
+
+  Widget _buildCollection(Collection collection) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(
+        context,
+        CollectionPage.routeName,
+        arguments: CollectionPageArguments(collection: collection),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(7)),
+        child: Container(
+          color: AppColors.grayChateau,
+          child: Hero(
+            tag: 'photo-${collection.id}',
+            child: CachedNetworkImage(
+              imageUrl: '${collection.coverPhoto.urls.regular}',
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: (collection.coverPhoto.color != null)
+                    ? HexColor.fromHex(collection.coverPhoto.color)
+                    : Colors.transparent,
+                child: Loader(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          ),
+        ),
       ),
     );
   }

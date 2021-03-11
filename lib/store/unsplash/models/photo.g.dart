@@ -65,6 +65,14 @@ Map<String, dynamic> _$ImageUrlToJson(ImageUrl instance) => <String, dynamic>{
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Photo on _Photo, Store {
+  Computed<PhotosStoreState> _$relatedPhotosStateComputed;
+
+  @override
+  PhotosStoreState get relatedPhotosState => (_$relatedPhotosStateComputed ??=
+          Computed<PhotosStoreState>(() => super.relatedPhotosState,
+              name: '_Photo.relatedPhotosState'))
+      .value;
+
   final _$likesAtom = Atom(name: '_Photo.likes');
 
   @override
@@ -95,6 +103,37 @@ mixin _$Photo on _Photo, Store {
     });
   }
 
+  final _$_relatedPhotosFutureAtom = Atom(name: '_Photo._relatedPhotosFuture');
+
+  @override
+  ObservableFuture<List<Photo>> get _relatedPhotosFuture {
+    _$_relatedPhotosFutureAtom.reportRead();
+    return super._relatedPhotosFuture;
+  }
+
+  @override
+  set _relatedPhotosFuture(ObservableFuture<List<Photo>> value) {
+    _$_relatedPhotosFutureAtom.reportWrite(value, super._relatedPhotosFuture,
+        () {
+      super._relatedPhotosFuture = value;
+    });
+  }
+
+  final _$relatedPhotosAtom = Atom(name: '_Photo.relatedPhotos');
+
+  @override
+  ObservableList<Photo> get relatedPhotos {
+    _$relatedPhotosAtom.reportRead();
+    return super.relatedPhotos;
+  }
+
+  @override
+  set relatedPhotos(ObservableList<Photo> value) {
+    _$relatedPhotosAtom.reportWrite(value, super.relatedPhotos, () {
+      super.relatedPhotos = value;
+    });
+  }
+
   final _$likeAsyncAction = AsyncAction('_Photo.like');
 
   @override
@@ -109,11 +148,22 @@ mixin _$Photo on _Photo, Store {
     return _$unlikeAsyncAction.run(() => super.unlike());
   }
 
+  final _$fetchRelatedPhotosAsyncAction =
+      AsyncAction('_Photo.fetchRelatedPhotos');
+
+  @override
+  Future<void> fetchRelatedPhotos() {
+    return _$fetchRelatedPhotosAsyncAction
+        .run(() => super.fetchRelatedPhotos());
+  }
+
   @override
   String toString() {
     return '''
 likes: ${likes},
-likedByUser: ${likedByUser}
+likedByUser: ${likedByUser},
+relatedPhotos: ${relatedPhotos},
+relatedPhotosState: ${relatedPhotosState}
     ''';
   }
 }
