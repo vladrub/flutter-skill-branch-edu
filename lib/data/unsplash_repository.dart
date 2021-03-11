@@ -66,7 +66,11 @@ class UnsplashRepository {
       );
       List data = response.data;
       List<Photo> photos = [];
-      data.forEach((photo) => photos.add(Photo.fromJson(photo)));
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
       return photos;
     } on DioError catch (e) {
       print('Error: ${e.error}');
@@ -113,7 +117,11 @@ class UnsplashRepository {
       );
       List data = response.data;
       List<Photo> photos = [];
-      data.forEach((photo) => photos.add(Photo.fromJson(photo)));
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
       return photos;
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
@@ -129,7 +137,11 @@ class UnsplashRepository {
       );
       List data = response.data;
       List<Photo> photos = [];
-      data.forEach((photo) => photos.add(Photo.fromJson(photo)));
+      data.forEach((json) {
+        var _photo = Photo.fromJson(json);
+        _photo.unsplashRepository = this;
+        photos.add(_photo);
+      });
       return photos;
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
@@ -148,6 +160,26 @@ class UnsplashRepository {
       data.forEach(
           (collection) => collections.add(Collection.fromJson(collection)));
       return collections;
+    } on DioError catch (e) {
+      throw Exception('Error: ${e.error}');
+    }
+  }
+
+  Future<void> likePhoto(String photoId) async {
+    if (authToken == '') Exception('Error: Not authorized!');
+
+    try {
+      await _dio.post("https://api.unsplash.com/photos/$photoId/like");
+    } on DioError catch (e) {
+      throw Exception('Error: ${e.error}');
+    }
+  }
+
+  Future<void> unlikePhoto(String photoId) async {
+    if (authToken == '') Exception('Error: Not authorized!');
+
+    try {
+      await _dio.delete("https://api.unsplash.com/photos/$photoId/like");
     } on DioError catch (e) {
       throw Exception('Error: ${e.error}');
     }

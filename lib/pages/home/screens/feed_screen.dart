@@ -177,10 +177,7 @@ class _FeedScreenState extends State<FeedScreen> {
               ],
             ),
           ),
-          LikeButton(
-            likeCount: photo.likes,
-            isLiked: true,
-          )
+          LikeButton(photo: photo)
         ],
       ),
     );

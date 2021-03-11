@@ -182,7 +182,6 @@ class _ProfileScreenState extends State<ProfileScreen>
           }
         }),
         Observer(builder: (_) {
-          print(_unsplashStore.profileStore.profile.likedPhotos);
           if (_unsplashStore.profileStore.profile.likedPhotos != null) {
             return ProfilePhotosGrid(
               photos: _unsplashStore.profileStore.profile.likedPhotos,
@@ -206,7 +205,6 @@ class _ProfileScreenState extends State<ProfileScreen>
           }
         }),
         Observer(builder: (_) {
-          print(_unsplashStore.profileStore.profile.collections);
           if (_unsplashStore.profileStore.profile.collections != null) {
             return ProfileCollectionsGrid(
               collections: _unsplashStore.profileStore.profile.collections,

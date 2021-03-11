@@ -57,3 +57,63 @@ Map<String, dynamic> _$ImageUrlToJson(ImageUrl instance) => <String, dynamic>{
       'small': instance.small,
       'thumb': instance.thumb,
     };
+
+// **************************************************************************
+// StoreGenerator
+// **************************************************************************
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+
+mixin _$Photo on _Photo, Store {
+  final _$likesAtom = Atom(name: '_Photo.likes');
+
+  @override
+  int get likes {
+    _$likesAtom.reportRead();
+    return super.likes;
+  }
+
+  @override
+  set likes(int value) {
+    _$likesAtom.reportWrite(value, super.likes, () {
+      super.likes = value;
+    });
+  }
+
+  final _$likedByUserAtom = Atom(name: '_Photo.likedByUser');
+
+  @override
+  bool get likedByUser {
+    _$likedByUserAtom.reportRead();
+    return super.likedByUser;
+  }
+
+  @override
+  set likedByUser(bool value) {
+    _$likedByUserAtom.reportWrite(value, super.likedByUser, () {
+      super.likedByUser = value;
+    });
+  }
+
+  final _$likeAsyncAction = AsyncAction('_Photo.like');
+
+  @override
+  Future<void> like() {
+    return _$likeAsyncAction.run(() => super.like());
+  }
+
+  final _$unlikeAsyncAction = AsyncAction('_Photo.unlike');
+
+  @override
+  Future<void> unlike() {
+    return _$unlikeAsyncAction.run(() => super.unlike());
+  }
+
+  @override
+  String toString() {
+    return '''
+likes: ${likes},
+likedByUser: ${likedByUser}
+    ''';
+  }
+}

@@ -226,12 +226,7 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
               width: 105,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LikeButton(
-                    likeCount: 2157,
-                    isLiked: false,
-                  )
-                ],
+                children: [LikeButton(photo: _photoPageArguments.photo)],
               ),
             )
           ],
