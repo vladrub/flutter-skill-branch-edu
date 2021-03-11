@@ -1,6 +1,4 @@
-import 'package:FlutterGalleryApp/models/collection.dart';
-import 'package:FlutterGalleryApp/models/photo.dart';
-import 'package:FlutterGalleryApp/models/profile.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/store/unsplash/unsplash_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -40,6 +38,11 @@ abstract class _ProfileStore with Store {
   Profile get profile =>
       profiles.firstWhere((profile) => profile.username == userName,
           orElse: () => null);
+
+  @computed
+  Profile get userProfile => profiles.firstWhere(
+      (profile) => profile.username == unsplashStore.authStore.userName,
+      orElse: () => null);
 
   @computed
   ProfileStoreState get state {

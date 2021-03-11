@@ -1,4 +1,4 @@
-import 'package:FlutterGalleryApp/models/photo.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/widgets/loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

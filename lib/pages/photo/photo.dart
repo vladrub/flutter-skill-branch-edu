@@ -1,4 +1,4 @@
-import 'package:FlutterGalleryApp/models/photo.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/pages/home/screens/profile_screen.dart';
 import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,14 +72,6 @@ class _PhotoPageState extends State<PhotoPage> with TickerProviderStateMixin {
               SizedBox(height: 15),
               GestureDetector(
                 onTap: () async {
-                  // Navigator.of(context).pushNamed(
-                  //   "${ProfileScreen.routeName}/${_photoPageArguments.photo.profile.id}",
-                  //   arguments: ProfileScreenArguments(
-                  //     userName: _photoPageArguments.photo.profile.username,
-                  //     heroTag:
-                  //         'avatar-${_photoPageArguments.photo.profile.username}',
-                  //   ),
-                  // )
                   await Navigator.push(
                     context,
                     MaterialPageRoute(

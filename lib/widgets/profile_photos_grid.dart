@@ -1,5 +1,5 @@
 import 'package:FlutterGalleryApp/extensions/hex_color.dart';
-import 'package:FlutterGalleryApp/models/photo.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/pages/photo/photo.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/loader.dart';

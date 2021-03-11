@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'package:FlutterGalleryApp/models/auth.dart';
-import 'package:FlutterGalleryApp/models/collection.dart';
-import 'package:FlutterGalleryApp/models/photo.dart';
-import 'package:FlutterGalleryApp/models/profile.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
@@ -17,11 +13,11 @@ class UnsplashRepository {
   // static const String accessKey = '8TVzZQqShIvNnurPqFPZLwvf6VRHYL-s5r-KWC57MBo';
   // static const String secretKey = '6uN0FvsCIkPP6JHnqx6ZuPF2WbnG-YJq6DG1K0YA7M0';
 
-  static const String accessKey = 'BCZKmeaE7DL240HtAKQ8YXzq61lrYD3nJeT0mY8mYzA';
-  static const String secretKey = 'lanbRdEbE0KJmqlnTrWh5fFFstSEeMKju0CijI2Lvfo';
+  // static const String accessKey = 'BCZKmeaE7DL240HtAKQ8YXzq61lrYD3nJeT0mY8mYzA';
+  // static const String secretKey = 'lanbRdEbE0KJmqlnTrWh5fFFstSEeMKju0CijI2Lvfo';
 
-  // static const String accessKey = 'h0A54CMLxKSN9OSk93PHqPEVclPS2lSrQ0lEmsoV1M4';
-  // static const String secretKey = 'N4x_KS_2qO0ISvQgN9Ftg2Fwnqc-d9-kRsr5d1G_4_k';
+  static const String accessKey = 'h0A54CMLxKSN9OSk93PHqPEVclPS2lSrQ0lEmsoV1M4';
+  static const String secretKey = 'N4x_KS_2qO0ISvQgN9Ftg2Fwnqc-d9-kRsr5d1G_4_k';
 
   // static const String accessKey = '0yopJhCs0XXot7z0piCNY9PTLyX_c8uTTB8tJeC-un4';
   // static const String secretKey = 'oU-VZKXtUZULJee1PrkDPTC9dQbSZoH_MWEH-TUNKt0';
@@ -38,9 +34,11 @@ class UnsplashRepository {
     _dio = Dio();
 
     _dio.options.baseUrl = "https://api.unsplash.com/";
+    _dio.options.headers = {'Authorization': 'Client-ID $accessKey'};
   }
 
   void setAuthToken(String token) {
+    if (token == null) return;
     authToken = token;
     _dio.options.headers = {'Authorization': 'Bearer $token'};
   }

@@ -1,11 +1,8 @@
-import 'package:FlutterGalleryApp/models/collection.dart';
-import 'package:FlutterGalleryApp/models/photo.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'profile.g.dart';
-
-enum ProfileStoreState { initial, loading, loaded }
 
 @JsonSerializable(explicitToJson: true)
 class Profile extends _Profile with _$Profile {
@@ -118,17 +115,14 @@ abstract class _Profile with Store {
   @JsonKey(name: 'following_count')
   int followingCount;
 
-  // @observable
-  // ObservableFuture<Profile> _profileFuture;
+  @observable
+  ObservableFuture<List<Photo>> _profilePhotosFuture;
 
-  // @observable
-  // ObservableFuture<List<Photo>> _profilePhotosFuture;
+  @observable
+  ObservableFuture<List<Photo>> _profileLikedPhotosFuture;
 
-  // @observable
-  // ObservableFuture<List<Photo>> _profileLikedPhotosFuture;
-
-  // @observable
-  // ObservableFuture<List<Collection>> _profileCollectionsFuture;
+  @observable
+  ObservableFuture<List<Collection>> _profileCollectionsFuture;
 }
 
 @JsonSerializable(explicitToJson: true)

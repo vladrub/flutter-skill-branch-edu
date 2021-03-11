@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _unsplashStore.repository.setAuthToken(token);
+    _unsplashStore.authStore.setToken(token);
 
     return MultiProvider(
       providers: [

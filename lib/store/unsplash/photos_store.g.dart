@@ -47,6 +47,36 @@ mixin _$PhotosStore on _PhotosStore, Store {
     });
   }
 
+  final _$pageAtom = Atom(name: '_PhotosStore.page');
+
+  @override
+  int get page {
+    _$pageAtom.reportRead();
+    return super.page;
+  }
+
+  @override
+  set page(int value) {
+    _$pageAtom.reportWrite(value, super.page, () {
+      super.page = value;
+    });
+  }
+
+  final _$isLastPageAtom = Atom(name: '_PhotosStore.isLastPage');
+
+  @override
+  bool get isLastPage {
+    _$isLastPageAtom.reportRead();
+    return super.isLastPage;
+  }
+
+  @override
+  set isLastPage(bool value) {
+    _$isLastPageAtom.reportWrite(value, super.isLastPage, () {
+      super.isLastPage = value;
+    });
+  }
+
   final _$errorMessageAtom = Atom(name: '_PhotosStore.errorMessage');
 
   @override
@@ -74,6 +104,8 @@ mixin _$PhotosStore on _PhotosStore, Store {
   String toString() {
     return '''
 photos: ${photos},
+page: ${page},
+isLastPage: ${isLastPage},
 errorMessage: ${errorMessage},
 state: ${state}
     ''';

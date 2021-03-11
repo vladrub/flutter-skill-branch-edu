@@ -1,4 +1,4 @@
-import 'package:FlutterGalleryApp/models/profile.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/material.dart';

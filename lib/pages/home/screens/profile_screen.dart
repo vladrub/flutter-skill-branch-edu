@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   )
                 : null,
             actions: [
-              if (_userName != null)
+              if (_userName == null)
                 PopupMenuButton(
                   onSelected: (val) async {
                     if (val == 'logout') {

@@ -221,6 +221,57 @@ mixin _$Profile on _Profile, Store {
     });
   }
 
+  final _$_profilePhotosFutureAtom =
+      Atom(name: '_Profile._profilePhotosFuture');
+
+  @override
+  ObservableFuture<List<Photo>> get _profilePhotosFuture {
+    _$_profilePhotosFutureAtom.reportRead();
+    return super._profilePhotosFuture;
+  }
+
+  @override
+  set _profilePhotosFuture(ObservableFuture<List<Photo>> value) {
+    _$_profilePhotosFutureAtom.reportWrite(value, super._profilePhotosFuture,
+        () {
+      super._profilePhotosFuture = value;
+    });
+  }
+
+  final _$_profileLikedPhotosFutureAtom =
+      Atom(name: '_Profile._profileLikedPhotosFuture');
+
+  @override
+  ObservableFuture<List<Photo>> get _profileLikedPhotosFuture {
+    _$_profileLikedPhotosFutureAtom.reportRead();
+    return super._profileLikedPhotosFuture;
+  }
+
+  @override
+  set _profileLikedPhotosFuture(ObservableFuture<List<Photo>> value) {
+    _$_profileLikedPhotosFutureAtom
+        .reportWrite(value, super._profileLikedPhotosFuture, () {
+      super._profileLikedPhotosFuture = value;
+    });
+  }
+
+  final _$_profileCollectionsFutureAtom =
+      Atom(name: '_Profile._profileCollectionsFuture');
+
+  @override
+  ObservableFuture<List<Collection>> get _profileCollectionsFuture {
+    _$_profileCollectionsFutureAtom.reportRead();
+    return super._profileCollectionsFuture;
+  }
+
+  @override
+  set _profileCollectionsFuture(ObservableFuture<List<Collection>> value) {
+    _$_profileCollectionsFutureAtom
+        .reportWrite(value, super._profileCollectionsFuture, () {
+      super._profileCollectionsFuture = value;
+    });
+  }
+
   @override
   String toString() {
     return '''

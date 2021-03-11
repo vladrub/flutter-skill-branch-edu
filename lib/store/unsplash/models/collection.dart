@@ -1,5 +1,4 @@
-import 'package:FlutterGalleryApp/models/photo.dart';
-import 'package:FlutterGalleryApp/models/profile.dart';
+import 'package:FlutterGalleryApp/store/unsplash/models/models.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'collection.g.dart';
